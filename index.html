@@ -86,7 +86,7 @@
         "tier": "A",
         "tag": "差枚",
         "tagColor": "bg-yellow-400",
-        "imageUrl": "image_tensei.jpg",
+        "imageUrl": "image_tensei2.jpg",
         "link": "",
         "memo": DEFAULT_MEMO_TEMPLATE
       },
@@ -119,7 +119,7 @@
         "tier": "B",
         "tag": "ゾーン",
         "tagColor": "bg-orange-400",
-        "imageUrl": "image_tensei.jpg",
+        "imageUrl": "image_tensei2.jpg",
         "link": "",
         "memo": DEFAULT_MEMO_TEMPLATE
       },
@@ -324,7 +324,8 @@
       
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
-        const saved = localStorage.getItem('slot_app_rukoItems');
+        // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
+        const saved = localStorage.getItem('slot_app_rukoItems_v2');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
           try { items = JSON.parse(saved); } catch (e) { console.error(e); }
@@ -333,7 +334,8 @@
       });
 
       const [myItems, setMyItems] = useState(() => {
-        const saved = localStorage.getItem('slot_app_myItems');
+        // ★キー名を変更して古いキャッシュをリセット
+        const saved = localStorage.getItem('slot_app_myItems_v2');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
@@ -345,11 +347,11 @@
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v2', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v2', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
