@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <!-- ▼ これがあることで文字化けを防ぎます ▼ -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>スロット狙い目ティア管理アプリ</title>
@@ -28,41 +27,237 @@
   
   <!-- アプリ本体のコード -->
   <script type="text/babel" data-type="module">
-    import React, { useState, useMemo } from 'react';
+    import React, { useState, useMemo, useEffect } from 'react';
     import { createRoot } from 'react-dom/client';
     import { 
       Search, Star, MessageSquare, Menu, Plus, Move, 
-      Check, X, Edit2, Trash2, Layout, History, ListPlus, Image as ImageIcon
+      Check, X, Edit2, Trash2, Layout, History, ListPlus, Image as ImageIcon, ExternalLink, Download
     } from 'lucide-react';
 
+    // =========================================================================
+    // ★ 管理者モード設定
+    // false にすると、Ruko App も画面上で編集（追加・移動・リンク変更など）が可能になります。
+    // 一般公開する際は、ここを false に書き換えてください。
+    // =========================================================================
+    const IS_ADMIN_MODE = false; 
+
+    const DEFAULT_MEMO_TEMPLATE = "【一言メモ】\n\n\n【狙い目ボーダー】\n";
+
     // Rukoさんの公式データ (2026/1/29 最新版)
+    // ※画面上で編集後、Exportボタンを押してコピーされた内容をここに上書きしてください。
     const RUKO_OFFICIAL_DATA = [
-      { id: 'r_ghoul', name: 'L パチスロ 東京喰種', detail: 'リセット狙い', tier: 'S', tag: 'リセ', tagColor: 'bg-orange-400', imageUrl: 'image_6c1846.jpg' },
-      { id: 'r2', name: 'スマスロ北斗の拳', detail: '穢れ・優遇狙い', tier: 'A', tag: '穢れ', tagColor: 'bg-red-500', imageUrl: '' },
-      { id: 'r3', name: '甲鉄城のカバネリ', detail: 'スルー回数狙い', tier: 'A', tag: 'スルー', tagColor: 'bg-orange-400', imageUrl: '' },
-      { id: 'r4', name: 'L 革命機ヴァルヴレイヴ', detail: '差枚狙い', tier: 'A', tag: '差枚', tagColor: 'bg-yellow-400', imageUrl: '' },
-      { id: 'r5', name: 'モンキーターンV', detail: 'スルー狙い', tier: 'B', tag: 'スルー', tagColor: 'bg-orange-400', imageUrl: '' },
-      { id: 'r6', name: '炎炎ノ消防隊', detail: '優遇モード狙い', tier: 'B', tag: '優遇', tagColor: 'bg-red-500', imageUrl: '' },
-      { id: 'r7', name: '革命機ヴァルヴレイヴ', detail: 'ゾーン狙い', tier: 'B', tag: 'ゾーン', tagColor: 'bg-orange-400', imageUrl: '' },
-      { id: 'r8', name: 'ゴッドイー夕ー復活', detail: '差枚狙い', tier: 'B', tag: '差枚', tagColor: 'bg-yellow-400', imageUrl: '' },
-      { id: 'r9', name: '賞金首Angel', detail: '区間切断', tier: 'B', tag: '区間切断', tagColor: 'bg-purple-600', imageUrl: '' },
-      { id: 'r10', name: 'ToLOVEるダークネス', detail: '優遇狙い', tier: 'B', tag: '優遇', tagColor: 'bg-red-500', imageUrl: '' },
-      { id: 'r11', name: 'モンキーターンV', detail: 'ゾーン狙い', tier: 'C', tag: 'ゾーン', tagColor: 'bg-orange-400', imageUrl: '' },
-      { id: 'r12', name: '南国育ち', detail: '優遇狙い', tier: 'C', tag: '優遇', tagColor: 'bg-red-500', imageUrl: '' },
-      { id: 'r13', name: '炎炎ノ消防隊', detail: 'スルー狙い', tier: 'C', tag: 'スルー', tagColor: 'bg-orange-400', imageUrl: '' },
-      { id: 'r14', name: '押忍！番長4', detail: '優遇狙い', tier: 'C', tag: '優遇', tagColor: 'bg-red-500', imageUrl: '' },
-      { id: 'r15', name: '沖ドキ！BLACK', detail: 'リセット狙い', tier: 'C', tag: 'リセ', tagColor: 'bg-orange-400', imageUrl: '' },
-      { id: 'r16', name: 'モンスターハンターライズ', detail: '稼働低下', tier: '格下げ', tag: '', imageUrl: '' },
-      { id: 'r17', name: 'チバリヨ2', detail: 'リスク増', tier: '格下げ', tag: '', imageUrl: '' },
-      { id: 'r18', name: 'スマスロ北斗の拳', detail: '格下げ', tier: '格下げ', tag: '', imageUrl: '' },
-      { id: 'r19', name: 'シンフォギア 正義の歌', detail: '格下げ', tier: '格下げ', tag: '', imageUrl: '' },
+      {
+        "id": "r_ghoul",
+        "name": "東京喰種",
+        "detail": "リセット０G～＆示唆打ち分け",
+        "tier": "S",
+        "tag": "リセ",
+        "tagColor": "bg-orange-400",
+        "imageUrl": "image_6c1846.jpg",
+        "link": "https://note.com/ruko7613/n/na6a453efe232",
+        "memo": "【一言メモ】\n・現時点のリセット狙いでは一番優先度高い。\n→示唆続行とベース込みで108％\n・なるべく周りの示唆も見ながらこなすように。\n→お年寄りより若者のが1スヤメしがち\n\n【狙い目ボーダー】\nリセ０Gから打ち、CZスルー時は示唆で押し引き。\n☆CZ失敗時のプッシュ\n・天国準備以上なら続行\n\n☆CZ失敗後１G目のアイキャッチ\n・金木なら100ゾーンまで打てる\n※金木がAor天国示唆で朝２でAに移行する可能性が低いため実質天国示唆となっている\n\nその後は100ゾーン当選×金木アイキャッチが続く限りゾーン狙いを実行する。\n\n・やめどき\nAT後は引き戻し15Gまで見てやめ"
+      },
+      {
+        "id": "r2",
+        "name": "東京喰種",
+        "detail": "穢れ（内部ポイント）＆モード看破",
+        "tier": "A",
+        "tag": "穢れ",
+        "tagColor": "bg-purple-500",
+        "imageUrl": "image_2.jpg",
+        "link": "https://note.com/ruko7613/n/n039708015839",
+        "memo": "【一言メモ】\n・内部ポイントを正確に履歴読みできている人が少なくライバルがあまりいないので半年以上ずっと拾えている。\n\n・前回AT前のCZ当選ゲームや当該示唆などボーダー調整要素多いので細かいところは打感を身に着けて判断するように。\n\n・穢れの開放期待度は\n9pt～12ptが各20％前後\n8ptと13ptが各10％前後\n7pt以下はほぼ0％\n13pt以降もほぼなく20ptぐらいまで来るとたまに開放する←狙えはしない\n\n・差枚は1500枚以上へこみがボーダー凹んでいればいるほど強い\n\n\n【狙い目ボーダー】\nAT駆け抜け後;内部ポイント9pt若しくは10pt～\n\n※解放の振り分けが9pt～12ptに固まっているので自分でCZをスルーするたびに抽選を受けられる9ptなどが強いのであって12ptからだと12ptのにしか抽選を受けられないので弱い。\n\n☆50G示唆\n・2.4.6→即やめ\n・喰うか喰われるか→天国ゾーン抜けやめ\n・デフォルト→続行\n☆前回モード\nAT後も前回モード高い後の方が高モード来やすいので、前回AT前がCZ当選300G以下のものの方が強い。"
+      },
+      {
+        "id": "r3",
+        "name": "鉄拳６",
+        "detail": "スルー回数狙い",
+        "tier": "A",
+        "tag": "スルー",
+        "tagColor": "bg-blue-400",
+        "imageUrl": "image_3.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n・鉄拳６はスルー天井の浅さに機械割を割かれているのでそこを狙いたい。\n\n・差枚で上位狙うより凹み上げする喰種的な狙い方のが勝ちやすい\n\n【狙い目ボーダー】\n・リセ\n0ス⇒220pt～\n1ス以降⇒0G～\n\n・リセ以外\n2ス⇒0G～\n\n・ヤメ時: 即ヤメ推奨"
+      },
+      {
+        "id": "r4",
+        "name": "北斗転生２",
+        "detail": "＋1500枚以上＆ゾーン狙い",
+        "tier": "A",
+        "tag": "差枚",
+        "tagColor": "bg-yellow-400",
+        "imageUrl": "image_4.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r5",
+        "name": "L範馬刃牙",
+        "detail": "スルー狙い",
+        "tier": "B",
+        "tag": "スルー",
+        "tagColor": "bg-orange-400",
+        "imageUrl": "image_5.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n示唆がいっさい無く、液晶ポイントの加算などもない最近珍しい台なので期待値表鵜呑みにしていい。\n\n【狙い目ボーダー】\n・4スルー；40G～ATまで\n・5スルー以降：0Ｇ～ATまで\n\n・やめどき\nAT後は引き戻しを見ずに即やめでいいが、引き戻した場合は連荘数を引き継ぐので8連以上していれば引き戻しも見る。\n掘られるのがどうしても嫌なら16Ｇ程度なので回してもいい。"
+      },
+      {
+        "id": "r6",
+        "name": "ヴヴヴ２",
+        "detail": "優遇モード狙い",
+        "tier": "B",
+        "tag": "優遇",
+        "tagColor": "bg-red-500",
+        "imageUrl": "image_6.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r7",
+        "name": "北斗転生２",
+        "detail": "ゾーン狙い",
+        "tier": "B",
+        "tag": "ゾーン",
+        "tagColor": "bg-orange-400",
+        "imageUrl": "image_7.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r8",
+        "name": "ゴッドイー夕ー",
+        "detail": "差枚狙い",
+        "tier": "B",
+        "tag": "差枚",
+        "tagColor": "bg-yellow-400",
+        "imageUrl": "image_8.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r9",
+        "name": "沖ドキゴージャス",
+        "detail": "区間切断",
+        "tier": "B",
+        "tag": "区間切断",
+        "tagColor": "bg-purple-600",
+        "imageUrl": "image_9.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r10",
+        "name": "攻殻機動隊",
+        "detail": "優遇狙い",
+        "tier": "B",
+        "tag": "優遇",
+        "tagColor": "bg-red-500",
+        "imageUrl": "image_10.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r11",
+        "name": "L範馬刃牙",
+        "detail": "ゾーン狙い",
+        "tier": "C",
+        "tag": "ゾーン",
+        "tagColor": "bg-orange-400",
+        "imageUrl": "image_11.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r12",
+        "name": "かぐや様",
+        "detail": "優遇狙い",
+        "tier": "C",
+        "tag": "優遇",
+        "tagColor": "bg-red-500",
+        "imageUrl": "image_12.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r13",
+        "name": "炎炎ノ消防隊",
+        "detail": "スルー狙い",
+        "tier": "C",
+        "tag": "スルー",
+        "tagColor": "bg-orange-400",
+        "imageUrl": "image_13.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r14",
+        "name": "アズールレーン",
+        "detail": "優遇狙い",
+        "tier": "C",
+        "tag": "優遇",
+        "tagColor": "bg-red-500",
+        "imageUrl": "image_14.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r15",
+        "name": "モンキーターン",
+        "detail": "リセット狙い",
+        "tier": "C",
+        "tag": "リセ",
+        "tagColor": "bg-orange-400",
+        "imageUrl": "image_15.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r16",
+        "name": "モンスターハンターライズ",
+        "detail": "稼働低下",
+        "tier": "地域差大",
+        "tag": "",
+        "imageUrl": "image_16.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r17",
+        "name": "チバリヨ2",
+        "detail": "リスク増",
+        "tier": "地域差大",
+        "tag": "",
+        "imageUrl": "image_17.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r18",
+        "name": "スマスロ北斗の拳",
+        "detail": "格下げ",
+        "tier": "地域差大",
+        "tag": "",
+        "imageUrl": "image_18.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      },
+      {
+        "id": "r19",
+        "name": "シンフォギア 正義の歌",
+        "detail": "格下げ",
+        "tier": "地域差大",
+        "tag": "",
+        "imageUrl": "image_19.jpg",
+        "link": "",
+        "memo": DEFAULT_MEMO_TEMPLATE
+      }
     ];
 
     const MASTER_TARGET_DATABASE = [
-      { id: 'db_ghoul', name: 'L パチスロ 東京喰種', detail: 'リセット 0G〜', category: 'リセット', tag: 'リセ', tagColor: 'bg-orange-400', imageUrl: 'image_6c1846.jpg' },
-      { id: 'db1', name: 'スマスロ北斗の拳', detail: '天井狙い 600G〜', category: '天井', tag: '天井', tagColor: 'bg-gray-700', imageUrl: '' },
-      { id: 'db3', name: 'モンキーターンV', detail: '1周期目 50pt〜', category: '周期', tag: '周期', tagColor: 'bg-blue-500', imageUrl: '' },
-      { id: 'db7', name: 'カバネリ', detail: '美馬後 100G〜', category: '短縮', tag: '短縮', tagColor: 'bg-orange-400', imageUrl: '' },
+      { id: 'db_ghoul', name: 'L パチスロ 東京喰種', detail: 'リセット 0G〜', category: 'リセット', tag: 'リセ', tagColor: 'bg-orange-400', imageUrl: 'image_6c1846.jpg', link: 'https://note.com/ruko7613/n/na6a453efe232', memo: DEFAULT_MEMO_TEMPLATE },
+      { id: 'db1', name: 'スマスロ北斗の拳', detail: '天井狙い 600G〜', category: '天井', tag: '天井', tagColor: 'bg-gray-700', imageUrl: 'image_20.jpg', memo: DEFAULT_MEMO_TEMPLATE },
+      { id: 'db3', name: 'モンキーターンV', detail: '1周期目 50pt〜', category: '周期', tag: '周期', tagColor: 'bg-blue-500', imageUrl: 'image_21.jpg', memo: DEFAULT_MEMO_TEMPLATE },
+      { id: 'db7', name: 'カバネリ', detail: '美馬後 100G〜', category: '短縮', tag: '短縮', tagColor: 'bg-orange-400', imageUrl: 'image_22.jpg', memo: DEFAULT_MEMO_TEMPLATE },
     ];
 
     const TIER_CONFIG = [
@@ -70,10 +265,10 @@
       { id: 'A', label: 'A', bg: 'bg-gradient-to-r from-orange-400 to-orange-500' },
       { id: 'B', label: 'B', bg: 'bg-gradient-to-r from-yellow-400 to-yellow-500' },
       { id: 'C', label: 'C', bg: 'bg-gradient-to-r from-green-400 to-green-500' },
-      { id: '格下げ', label: '格下げ', bg: 'bg-gradient-to-r from-gray-400 to-gray-600' },
+      { id: '地域差大', label: '地域差大', bg: 'bg-gradient-to-r from-gray-400 to-gray-600' },
     ];
 
-    const CardImage = ({ url, name, tag, tagColor }) => {
+    const CardImage = ({ url, name, tag, tagColor, hasLink }) => {
       const [error, setError] = useState(false);
       const [retryIndex, setRetryIndex] = useState(0);
 
@@ -116,6 +311,12 @@
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
           
+          {hasLink && (
+            <div className="absolute top-1 left-1 bg-black/60 p-1 rounded-md z-20">
+              <ExternalLink size={12} className="text-white" />
+            </div>
+          )}
+
           <div className="relative z-10 px-2 pb-1">
             <p className="text-[10px] text-white font-black leading-tight drop-shadow-md truncate">{name}</p>
             {tag && (
@@ -130,25 +331,80 @@
 
     const App = () => {
       const [activeTab, setActiveTab] = useState('ruko'); 
-      const [myItems, setMyItems] = useState([
-        { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: '' }
-      ]);
+      
+      // 自動保存されたデータを読み込む
+      const [rukoItems, setRukoItems] = useState(() => {
+        const saved = localStorage.getItem('slot_app_rukoItems');
+        let items = RUKO_OFFICIAL_DATA;
+        if (saved) {
+          try { items = JSON.parse(saved); } catch (e) { console.error(e); }
+        }
+        return items.map(item => ({ ...item, memo: item.memo || DEFAULT_MEMO_TEMPLATE }));
+      });
+
+      const [myItems, setMyItems] = useState(() => {
+        const saved = localStorage.getItem('slot_app_myItems');
+        let items = [
+          { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
+        ];
+        if (saved) {
+          try { items = JSON.parse(saved); } catch (e) { console.error(e); }
+        }
+        return items.map(item => ({ ...item, memo: item.memo || DEFAULT_MEMO_TEMPLATE }));
+      });
+
+      // データが更新されるたびにブラウザに自動保存する
+      useEffect(() => {
+        localStorage.setItem('slot_app_rukoItems', JSON.stringify(rukoItems));
+      }, [rukoItems]);
+
+      useEffect(() => {
+        localStorage.setItem('slot_app_myItems', JSON.stringify(myItems));
+      }, [myItems]);
+
       const [isEditing, setIsEditing] = useState(false);
       const [draggedItemId, setDraggedItemId] = useState(null);
       const [dragOverTier, setDragOverTier] = useState(null);
       const [searchQuery, setSearchQuery] = useState('');
       const [showToast, setShowToast] = useState(null);
 
-      const currentItems = activeTab === 'ruko' ? RUKO_OFFICIAL_DATA : myItems;
+      // --- 追加：詳細確認モーダル用の状態管理 ---
+      const [detailModalConfig, setDetailModalConfig] = useState({ isOpen: false, item: null });
+      const [isMemoEditing, setIsMemoEditing] = useState(false);
+      const [editingMemoText, setEditingMemoText] = useState('');
+
+      // --- 追加：モーダル用の状態管理 ---
+      const [modalConfig, setModalConfig] = useState({ isOpen: false, mode: 'add', itemId: null });
+      const [formData, setFormData] = useState({ name: '', detail: '', tag: '', imageUrl: '', link: '', memo: '' });
+      // ---------------------------------
+
+      const currentItems = activeTab === 'ruko' ? rukoItems : myItems;
+
+      // エクスポート機能（編集内容をコードに書き出す用）
+      const exportData = () => {
+        const dataStr = JSON.stringify(rukoItems, null, 2);
+        // クリップボードにコピー
+        navigator.clipboard.writeText(dataStr).then(() => {
+          triggerToast("JSONデータをコピーしました！コードの RUKO_OFFICIAL_DATA に貼り付けてください。");
+        }).catch(err => {
+          console.error("Clipboard copy failed:", err);
+          triggerToast("コピー失敗。コンソールからデータを取得してください。");
+          console.log(dataStr);
+        });
+      };
 
       const moveItem = (itemId, targetTier) => {
-        setMyItems(prev => prev.map(item => item.id === itemId ? { ...item, tier: targetTier } : item));
+        if (activeTab === 'ruko' && IS_ADMIN_MODE) {
+          setRukoItems(prev => prev.map(item => item.id === itemId ? { ...item, tier: targetTier } : item));
+        } else if (activeTab === 'my') {
+          setMyItems(prev => prev.map(item => item.id === itemId ? { ...item, tier: targetTier } : item));
+        }
         setDraggedItemId(null);
         setDragOverTier(null);
       };
 
       const handleDragStart = (e, id) => {
-        if (activeTab !== 'my') return;
+        if (activeTab === 'ruko' && !IS_ADMIN_MODE) return;
         setDraggedItemId(id);
         e.dataTransfer.effectAllowed = 'move';
       };
@@ -163,6 +419,66 @@
         if (draggedItemId) moveItem(draggedItemId, tierId);
       };
 
+      // 既存カードの編集機能 (モーダルを開く)
+      const openEditModal = (id) => {
+        const isRuko = activeTab === 'ruko';
+        const targetList = isRuko ? rukoItems : myItems;
+        const item = targetList.find(i => i.id === id);
+        if (!item) return;
+
+        setFormData({
+          name: item.name || '',
+          detail: item.detail || '',
+          tag: item.tag || '',
+          imageUrl: item.imageUrl || '',
+          link: item.link || '',
+          memo: item.memo || DEFAULT_MEMO_TEMPLATE
+        });
+        setModalConfig({ isOpen: true, mode: 'edit', itemId: id });
+      };
+
+      // 新規追加 (モーダルを開く)
+      const openAddModal = () => {
+        setFormData({ name: '', detail: '', tag: '', imageUrl: '', link: '', memo: DEFAULT_MEMO_TEMPLATE });
+        setModalConfig({ isOpen: true, mode: 'add', itemId: null });
+      };
+
+      // フォームの保存処理
+      const handleModalSave = () => {
+        if (!formData.name) {
+          triggerToast('機種名を入力してください');
+          return;
+        }
+
+        if (modalConfig.mode === 'add') {
+          const newItem = {
+            id: `${activeTab}-${Date.now()}`,
+            ...formData,
+            tier: 'C'
+          };
+          if (activeTab === 'ruko' && IS_ADMIN_MODE) {
+            setRukoItems([...rukoItems, newItem]);
+          } else {
+            setMyItems([...myItems, newItem]);
+          }
+          triggerToast(`${formData.name} を追加しました`);
+        } else if (modalConfig.mode === 'edit') {
+          const updateList = (list) => list.map(i => i.id === modalConfig.itemId ? { ...i, ...formData } : i);
+          if (activeTab === 'ruko') {
+            setRukoItems(updateList(rukoItems));
+          } else {
+            setMyItems(updateList(myItems));
+          }
+          triggerToast(`更新しました`);
+        }
+        setModalConfig({ isOpen: false, mode: 'add', itemId: null });
+      };
+
+      // フォームを閉じる処理
+      const handleModalClose = () => {
+        setModalConfig({ isOpen: false, mode: 'add', itemId: null });
+      };
+
       const addItemFromDB = (dbItem) => {
         const newItem = {
           ...dbItem,
@@ -175,11 +491,15 @@
 
       const triggerToast = (msg) => {
         setShowToast(msg);
-        setTimeout(() => setShowToast(null), 2000);
+        setTimeout(() => setShowToast(null), 3000);
       };
 
       const deleteItem = (id) => {
-        setMyItems(myItems.filter(item => item.id !== id));
+        if (activeTab === 'ruko' && IS_ADMIN_MODE) {
+          setRukoItems(rukoItems.filter(item => item.id !== id));
+        } else {
+          setMyItems(myItems.filter(item => item.id !== id));
+        }
       };
 
       const filteredItems = currentItems.filter(item => 
@@ -192,56 +512,74 @@
         (item.detail && item.detail.toLowerCase().includes(searchQuery.toLowerCase()))
       );
 
+      // ドラッグ可能かどうかの判定（My Tier は常時可、Ruko's は管理者かつ編集モード時のみ）
+      const canDrag = activeTab === 'my' || (activeTab === 'ruko' && IS_ADMIN_MODE && isEditing);
+
       return (
-        <div className="max-w-md mx-auto min-h-screen bg-gray-100 flex flex-col select-none pb-20 font-sans">
-          <header className="sticky top-0 z-50 bg-white border-b shadow-md">
-            <div className="px-4 py-2 flex items-center gap-3">
-              <div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center text-white font-black italic text-xs shadow-inner">777</div>
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input 
-                  type="text" 
-                  placeholder="機種名で検索..." 
-                  className="w-full bg-gray-100 rounded-full py-1.5 pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-blue-400/50"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              <Menu className="text-gray-500 w-6 h-6" />
-            </div>
-            
-            <div className="bg-neutral-900 text-white px-4 py-3 flex justify-between items-center">
-              <div>
-                <h1 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest leading-none mb-1">
-                  {activeTab === 'ruko' ? "Ruko's Rank" : activeTab === 'my' ? "Personal" : "Target DB"}
+        <div className="max-w-md mx-auto min-h-screen bg-gray-100 flex flex-col select-none pb-6 font-sans">
+          {/* ヘッダー部分 */}
+          <header className="sticky top-0 z-50 bg-white shadow-md">
+            <div className="bg-neutral-900 text-white px-4 py-3 flex flex-col gap-1">
+              <div className="flex justify-between items-start">
+                <h1 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest leading-none flex items-center gap-2">
+                  {activeTab === 'ruko' ? "Ruko App" : activeTab === 'my' ? "Personal" : "Target DB"}
+                  {activeTab === 'ruko' && IS_ADMIN_MODE && <span className="bg-red-500 text-white px-1.5 rounded-sm text-[8px]">Admin Mode</span>}
                 </h1>
-                <p className="text-xl font-black italic leading-none flex items-center gap-2">
-                  {activeTab === 'ruko' ? "最新(2026/1/29)" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
-                </p>
+                
+                <div className="flex gap-2">
+                  {/* エクスポートボタン (管理者モードのみ表示) */}
+                  {activeTab === 'ruko' && IS_ADMIN_MODE && isEditing && (
+                    <button 
+                      onClick={exportData}
+                      className="p-1.5 rounded-full bg-green-600 text-white shadow-lg transition-all active:scale-95 flex items-center justify-center"
+                      title="JSONをコピー"
+                    >
+                      <Download size={14} />
+                    </button>
+                  )}
+
+                  {/* 編集トグルボタン */}
+                  {(activeTab === 'my' || (activeTab === 'ruko' && IS_ADMIN_MODE)) && (
+                    <button 
+                      onClick={() => setIsEditing(!isEditing)}
+                      className={`p-1.5 rounded-full transition-all shadow-lg ${isEditing ? 'bg-red-500 rotate-90' : 'bg-blue-600'}`}
+                    >
+                      {isEditing ? <X size={14} /> : <Edit2 size={14} />}
+                    </button>
+                  )}
+                </div>
               </div>
-              {activeTab === 'my' && (
-                <button 
-                  onClick={() => setIsEditing(!isEditing)}
-                  className={`p-2 rounded-full transition-all shadow-lg ${isEditing ? 'bg-red-500 rotate-90' : 'bg-blue-600'}`}
-                >
-                  {isEditing ? <X size={18} /> : <Edit2 size={18} />}
-                </button>
-              )}
+              
+              <div className="flex justify-between items-end mt-1">
+                <p className="text-sm sm:text-base font-black italic leading-tight">
+                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/2/29" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
+                </p>
+                {activeTab === 'ruko' && (
+                  <p className="text-[9px] text-gray-400 whitespace-nowrap ml-2 pb-0.5 font-medium">拾いやすさ×期待値の高さ</p>
+                )}
+              </div>
             </div>
           </header>
 
+          {/* メインコンテンツ部分 */}
           <main className="p-3 flex-1 overflow-y-auto">
             {activeTab === 'list' ? (
               <div className="space-y-2">
                 {filteredDB.map((dbItem) => (
                   <div key={dbItem.id} className="bg-white rounded-xl border border-gray-200 p-3 flex items-center gap-3 shadow-sm active:bg-blue-50 transition-colors">
                     <div className="w-16 h-16 bg-neutral-800 rounded-lg overflow-hidden flex-shrink-0 border border-neutral-700">
-                      <CardImage url={dbItem.imageUrl} name={dbItem.name} tag={dbItem.tag} tagColor={dbItem.tagColor} />
+                      <CardImage url={dbItem.imageUrl} name={dbItem.name} tag={dbItem.tag} tagColor={dbItem.tagColor} hasLink={!!dbItem.link} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="bg-blue-100 text-blue-700 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">{dbItem.category}</span>
-                        <h3 className="font-bold text-sm truncate">{dbItem.name}</h3>
+                        <h3 
+                          className={`font-bold text-sm truncate ${dbItem.link ? 'cursor-pointer hover:text-blue-600 transition-colors' : ''}`}
+                          onClick={() => dbItem.link && window.open(dbItem.link, '_blank', 'noopener,noreferrer')}
+                        >
+                          {dbItem.name}
+                          {dbItem.link && <ExternalLink size={12} className="inline ml-1 text-gray-400" />}
+                        </h3>
                       </div>
                       <p className="text-xs text-gray-500 truncate">{dbItem.detail}</p>
                     </div>
@@ -269,24 +607,40 @@
                       {filteredItems.filter(i => i.tier === tier.id).map(item => (
                         <div 
                           key={item.id}
-                          draggable={activeTab === 'my'}
+                          draggable={canDrag}
                           onDragStart={(e) => handleDragStart(e, item.id)}
                           onDragEnd={() => { setDraggedItemId(null); setDragOverTier(null); }}
-                          className={`bg-white border-2 border-blue-500 rounded-xl overflow-hidden shadow-md relative transition-all ${activeTab === 'my' ? 'cursor-grab active:cursor-grabbing hover:border-blue-300' : ''} ${draggedItemId === item.id ? 'opacity-20 scale-90' : 'active:scale-95'}`}
+                          onClick={() => {
+                            if (!isEditing) {
+                              setDetailModalConfig({ isOpen: true, item: item });
+                              setIsMemoEditing(false);
+                              setEditingMemoText(item.memo || '');
+                            }
+                          }}
+                          className={`bg-white border-2 border-blue-500 rounded-xl overflow-hidden shadow-md relative transition-all ${canDrag ? 'cursor-grab active:cursor-grabbing hover:border-blue-300' : ''} ${draggedItemId === item.id ? 'opacity-20 scale-90' : 'active:scale-95'} ${!isEditing ? 'cursor-pointer hover:border-blue-400' : ''}`}
                         >
-                          <CardImage url={item.imageUrl} name={item.name} tag={item.tag} tagColor={item.tagColor} />
+                          <CardImage url={item.imageUrl} name={item.name} tag={item.tag} tagColor={item.tagColor} hasLink={!!item.link} />
                           
                           <div className="p-2 bg-neutral-900 text-blue-200 text-[10px] leading-tight min-h-[48px] flex items-center border-t border-neutral-800 italic">
                             {item.detail}
                           </div>
 
-                          {activeTab === 'my' && isEditing && (
-                            <button 
-                              onClick={(e) => { e.stopPropagation(); deleteItem(item.id); }}
-                              className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1.5 shadow-xl z-20 hover:bg-red-700"
-                            >
-                              <Trash2 size={12} />
-                            </button>
+                          {/* 編集・削除ボタン */}
+                          {(activeTab === 'my' || (activeTab === 'ruko' && IS_ADMIN_MODE)) && isEditing && (
+                            <div className="absolute top-1 right-1 flex flex-col gap-1 z-20">
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); deleteItem(item.id); }}
+                                className="bg-red-600 text-white rounded-full p-1.5 shadow-xl hover:bg-red-700"
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); openEditModal(item.id); }}
+                                className="bg-blue-600 text-white rounded-full p-1.5 shadow-xl hover:bg-blue-700"
+                              >
+                                <Edit2 size={12} />
+                              </button>
+                            </div>
                           )}
                         </div>
                       ))}
@@ -297,40 +651,202 @@
             )}
           </main>
 
-          <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t flex items-center h-18 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-            <button onClick={() => { setActiveTab('ruko'); setIsEditing(false); }} className={`flex flex-col items-center flex-1 h-full justify-center transition-all ${activeTab === 'ruko' ? 'text-blue-600 bg-blue-50/30' : 'text-gray-400'}`}>
-              <History size={24} className={activeTab === 'ruko' ? 'scale-110 drop-shadow-sm' : ''} />
-              <span className="text-[9px] font-black mt-1 uppercase tracking-widest">Ruko</span>
-            </button>
-            <button onClick={() => { setActiveTab('list'); setIsEditing(false); }} className={`flex flex-col items-center flex-1 h-full justify-center transition-all ${activeTab === 'list' ? 'text-blue-600 bg-blue-50/30' : 'text-gray-400'}`}>
-              <Search size={24} className={activeTab === 'list' ? 'scale-110' : ''} />
-              <span className="text-[9px] font-black mt-1 uppercase tracking-widest">List</span>
-            </button>
-            <button onClick={() => setActiveTab('my')} className={`flex flex-col items-center flex-1 h-full justify-center transition-all ${activeTab === 'my' ? 'text-blue-600 bg-blue-50/30' : 'text-gray-400'}`}>
-              <Layout size={24} className={activeTab === 'my' ? 'scale-110 drop-shadow-sm' : ''} />
-              <span className="text-[9px] font-black mt-1 uppercase tracking-widest">My Tier</span>
-            </button>
-          </nav>
-
-          {activeTab === 'my' && isEditing && (
+          {/* 新規追加フローティングボタン */}
+          {(activeTab === 'my' || (activeTab === 'ruko' && IS_ADMIN_MODE)) && isEditing && (
             <button 
-              onClick={() => {
-                const name = prompt('機種名');
-                const detail = prompt('狙い目');
-                const tag = prompt('タグ (例: リセ, スルー)');
-                const img = prompt('画像ファイル名 (例: image_6c1846.jpg)');
-                if (name) setMyItems([...myItems, { id: Date.now().toString(), name, detail, tag, tier: 'C', imageUrl: img || '' }]);
-              }}
-              className="fixed bottom-24 right-6 w-16 h-16 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all z-50 border-4 border-white"
+              onClick={openAddModal}
+              className="fixed bottom-6 right-6 w-16 h-16 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all z-50 border-4 border-white"
             >
               <Plus size={36} />
             </button>
           )}
 
+          {/* 入力フォーム (モーダル) */}
+          {modalConfig.isOpen && (
+            <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+              <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+                <h2 className="text-xl font-black mb-4 text-gray-800 flex-none">
+                  {modalConfig.mode === 'add' ? '新規追加' : '編集'}
+                </h2>
+                
+                <div className="space-y-3 flex-1 overflow-y-auto pr-1">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-600 mb-1">機種名 (必須)</label>
+                    <input 
+                      type="text" 
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="例: スマスロ北斗の拳"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-600 mb-1">狙い目</label>
+                    <input 
+                      type="text" 
+                      value={formData.detail}
+                      onChange={(e) => setFormData({...formData, detail: e.target.value})}
+                      className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="例: 天井狙い 600G〜"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-600 mb-1">タグ</label>
+                    <input 
+                      type="text" 
+                      value={formData.tag}
+                      onChange={(e) => setFormData({...formData, tag: e.target.value})}
+                      className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="例: リセ, スルー"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-600 mb-1">画像ファイル名</label>
+                    <input 
+                      type="text" 
+                      value={formData.imageUrl}
+                      onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                      className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="例: image_6c1846.jpg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-600 mb-1">リンクURL</label>
+                    <input 
+                      type="text" 
+                      value={formData.link}
+                      onChange={(e) => setFormData({...formData, link: e.target.value})}
+                      className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="例: https://note.com/..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-600 mb-1">詳細メモ (タップ時に表示)</label>
+                    <textarea 
+                      value={formData.memo}
+                      onChange={(e) => setFormData({...formData, memo: e.target.value})}
+                      className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 min-h-[120px]"
+                      placeholder="例: 105%ライン: 0スルー130G～&#13;&#10;ただし他のパラメータで変わる"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3 mt-5 flex-none">
+                  <button 
+                    onClick={handleModalClose}
+                    className="flex-1 bg-gray-200 text-gray-700 font-bold py-2.5 rounded-xl active:bg-gray-300 transition-colors"
+                  >
+                    キャンセル
+                  </button>
+                  <button 
+                    onClick={handleModalSave}
+                    className="flex-1 bg-blue-600 text-white font-bold py-2.5 rounded-xl shadow-md active:bg-blue-700 transition-colors"
+                  >
+                    保存する
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* --- 追加：詳細確認モーダル --- */}
+          {detailModalConfig.isOpen && detailModalConfig.item && (
+            <div className="fixed inset-0 bg-black/60 z-[110] flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setDetailModalConfig({isOpen: false, item: null})}>
+              <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
+                <div className="flex justify-between items-start mb-4 flex-none">
+                  <h2 className="text-xl font-black text-gray-800 leading-tight pr-4">{detailModalConfig.item.name}</h2>
+                  <button onClick={() => setDetailModalConfig({isOpen: false, item: null})} className="p-1.5 bg-gray-100 rounded-full text-gray-500 active:bg-gray-200 transition-colors">
+                    <X size={20} />
+                  </button>
+                </div>
+                
+                <div className="mb-4 flex-none">
+                  <div className={`inline-block px-3 py-1 rounded text-xs font-bold shadow-sm ${detailModalConfig.item.tagColor || 'bg-gray-200 text-black'}`}>
+                    {detailModalConfig.item.detail || '狙い目未設定'}
+                  </div>
+                </div>
+
+                <div className="relative mb-6 flex-1 overflow-hidden flex flex-col min-h-[150px] group">
+                  {isMemoEditing ? (
+                    <div className="flex flex-col gap-2 h-full animate-in fade-in zoom-in-95 duration-200">
+                      <textarea
+                        value={editingMemoText}
+                        onChange={(e) => setEditingMemoText(e.target.value)}
+                        className="w-full bg-white border-2 border-blue-400 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 flex-1 overflow-y-auto shadow-inner resize-none"
+                        placeholder="メモを入力してください..."
+                        autoFocus
+                      />
+                      <div className="flex gap-2 justify-end flex-none">
+                        <button 
+                          onClick={() => setIsMemoEditing(false)}
+                          className="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-bold rounded-lg active:bg-gray-300 transition-colors"
+                        >
+                          キャンセル
+                        </button>
+                        <button 
+                          onClick={() => {
+                            const updatedItem = { ...detailModalConfig.item, memo: editingMemoText };
+                            const updateList = (list) => list.map(i => i.id === updatedItem.id ? updatedItem : i);
+                            
+                            if (activeTab === 'ruko') {
+                              setRukoItems(updateList(rukoItems));
+                            } else {
+                              setMyItems(updateList(myItems));
+                            }
+                            
+                            setDetailModalConfig({ isOpen: true, item: updatedItem });
+                            setIsMemoEditing(false);
+                            triggerToast('メモを保存しました');
+                          }}
+                          className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-md active:bg-blue-700 transition-colors"
+                        >
+                          保存
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div 
+                        className="bg-gray-50 rounded-xl p-4 border border-gray-200 h-full cursor-pointer hover:bg-blue-50 transition-colors overflow-y-auto"
+                        onClick={() => setIsMemoEditing(true)}
+                      >
+                        <p className="text-sm text-gray-700 whitespace-pre-wrap font-medium leading-relaxed pr-6">
+                          {detailModalConfig.item.memo || <span className="text-gray-400">詳細な狙い目メモはまだ登録されていません。<br/>ここをタップしてメモを追加・編集できます。</span>}
+                        </p>
+                      </div>
+                      <div className="absolute top-3 right-3 p-1.5 bg-white shadow-sm border border-gray-100 rounded-full text-gray-400 group-hover:text-blue-500 group-hover:border-blue-200 transition-colors pointer-events-none">
+                        <Edit2 size={14} />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-3 flex-none">
+                  {detailModalConfig.item.link && (
+                    <button 
+                      onClick={() => window.open(detailModalConfig.item.link, '_blank', 'noopener,noreferrer')}
+                      className="w-full flex items-center justify-center gap-2 bg-blue-50 text-blue-600 font-bold py-3.5 rounded-xl border border-blue-200 active:bg-blue-100 transition-colors shadow-sm"
+                    >
+                      <ExternalLink size={18} />
+                      詳しい解説記事を見る
+                    </button>
+                  )}
+                  <button 
+                    onClick={() => setDetailModalConfig({isOpen: false, item: null})}
+                    className="w-full bg-neutral-800 text-white font-bold py-3.5 rounded-xl shadow-md active:bg-neutral-900 transition-colors"
+                  >
+                    閉じる
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* トースト通知 */}
           {showToast && (
-            <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-neutral-900/90 backdrop-blur-md text-white px-6 py-2.5 rounded-full text-xs font-bold shadow-2xl z-[70] animate-bounce flex items-center gap-2 border border-blue-500/50">
-              <Check size={14} className="text-blue-400" />
-              {showToast}
+            <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-neutral-900/90 backdrop-blur-md text-white px-6 py-2.5 rounded-full text-xs font-bold shadow-2xl z-[70] animate-bounce flex flex-col items-center text-center gap-1 border border-blue-500/50 w-10/12 max-w-xs">
+              <Check size={18} className="text-blue-400" />
+              <span>{showToast}</span>
             </div>
           )}
         </div>
