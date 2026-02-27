@@ -176,7 +176,7 @@
         "tagColor": "bg-red-500",
         "imageUrl": "image_kaguya.jpg",
         "link": "",
-        "memo": DEFAULT_MEMO_TEMPLATE
+        "memo": "【一言メモ】\n・SANKYOの区間管理が露骨に表れている台なので優遇狙いが効く\n・優遇だからといってつっぱするのではボーダーを下げてヒット＆アウェイすること\n→北斗やトラブルが優遇だからと言って０から打たないのと同じ\n\n【狙い目ボーダー】\n・前回、前々回がBB3～４連\n当該チャンス目8回～\n※BBの強さ１G連＞＞＞引き戻し\n\nその他優遇挙動など詳しい内容は記事参照\n\n・やめどき\nCZ失敗時は即やめ。\n優遇狙いの場合ボナ後引き戻しは基本的に全て見る。"
       },
       {
         "id": "r13",
@@ -187,7 +187,7 @@
         "tagColor": "bg-orange-400",
         "imageUrl": "image_enen2.jpg",
         "link": "",
-        "memo": DEFAULT_MEMO_TEMPLATE
+        "memo": "【一言メモ】\n・炎炎ループ間天井2000Gとは別にスルー天井があるのでそちらも覚えておく\n※5スルー後の次がエピソードボーナス\n・原作ファンの多い機種なのでスロット詳しくない人も打つ場合があるので拾いやすい部類\n\n【狙い目ボーダー】\n・3スルー以下\nループ間1200G～\n・4スルー以降\nループ間問わず当該０G～\n\n・やめどき\nストック潜伏確認してやめ"
       },
       {
         "id": "r14",
@@ -198,7 +198,7 @@
         "tagColor": "bg-red-500",
         "imageUrl": "image_azul.jpg",
         "link": "",
-        "memo": DEFAULT_MEMO_TEMPLATE
+        "memo": "【一言メモ】\n・2000枚以上凹み時に0ス天井選択率上昇\n・シンプルながらライバル少なくて拾える\n\n【狙い目ボーダー】\n・差枚マイナス2000枚以上\nAT後0スをボーナス当選まで"
       },
       {
         "id": "r15",
@@ -209,7 +209,7 @@
         "tagColor": "bg-orange-400",
         "imageUrl": "image_monkey.jpg",
         "link": "",
-        "memo": DEFAULT_MEMO_TEMPLATE
+        "memo": "【一言メモ】\n・リセット時はATまで打っても102％は出るが、1周期抜けまでに示唆なしの場合がくっと期待値が下がるのでそこで押し引きする\n\n【狙い目ボーダー】\n・リセ０G～1周期まで\nなにかしらの示唆出たらATまで続行\n①ライバルメットに変化\n②アイテム獲得\n③舟券青島（青でも可）\n④予想屋赤\n\n※1.2.4は大体天井なので釣られて続行しないように　"
       },
       {
         "id": "r16",
@@ -325,7 +325,7 @@
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
-        const saved = localStorage.getItem('slot_app_rukoItems_v2');
+        const saved = localStorage.getItem('slot_app_rukoItems_v3');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
           try { items = JSON.parse(saved); } catch (e) { console.error(e); }
@@ -335,7 +335,7 @@
 
       const [myItems, setMyItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセット
-        const saved = localStorage.getItem('slot_app_myItems_v2');
+        const saved = localStorage.getItem('slot_app_myItems_v3');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
@@ -347,11 +347,11 @@
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v2', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v3', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v2', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v3', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
