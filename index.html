@@ -99,7 +99,7 @@
         "tagColor": "bg-orange-400",
         "imageUrl": "image_baki.jpg",
         "link": "",
-        "memo": "【一言メモ】\n示唆がいっさい無く、液晶ポイントの加算などもない最近珍しい台なので期待値表鵜呑みにしていい。\n\n【狙い目ボーダー】\n・スルー不問：130G～200ゾーン\n\n・やめどき\nAT後は引き戻しを見ずに即やめでいいが、引き戻した場合は連荘数を引き継ぐので8連以上していれば引き戻しも見る。\n掘られるのがどうしても嫌なら16Ｇ程度なので回してもいい。"
+        "memo": "【一言メモ】\n示唆がいっさい無く、液晶ポイントの加算などもない最近珍しい台なので期待値表鵜呑みにしていい。\n\n【狙い目ボーダー】\n・4スルー；40G～ATまで\n・5スルー以降：0Ｇ～ATまで\n\n・やめどき\nAT後は引き戻しを見ずに即やめでいいが、引き戻した場合は連荘数を引き継ぐので8連以上していれば引き戻しも見る。\n掘られるのがどうしても嫌なら16Ｇ程度なので回してもいい。"
       },
       {
         "id": "r6",
@@ -154,7 +154,7 @@
         "tagColor": "bg-cyan-400",
         "imageUrl": "image_baki.jpg",
         "link": "",
-        "memo": DEFAULT_MEMO_TEMPLATE
+        "memo": "【一言メモ】\n示唆がいっさい無く、液晶ポイントの加算などもない最近珍しい台なので期待値表鵜呑みにしていい。\n\n【狙い目ボーダー】\n・スルー不問：130G～200ゾーン\n\n・やめどき\nAT後は引き戻しを見ずに即やめでいいが、引き戻した場合は連荘数を引き継ぐので8連以上していれば引き戻しも見る。\n掘られるのがどうしても嫌なら16Ｇ程度なので回してもいい。"
       },
       {
         "id": "r12",
@@ -240,7 +240,7 @@
         "tier": "その他狙い目",
         "tag": "リセ",
         "tagColor": "bg-orange-400",
-        "imageUrl": "image_duo2.jpg",
+        "imageUrl": "image_okidokiduo.jpg",
         "link": "https://note.com/ruko7613/n/n1171ffbdcba5",
         "memo": "【一言メモ】\n・稼働は少なく、通常のハイエナは厳しい\n・リセット区間は甘く少しでも触られていれば打てるのでほぼそれだけ\n・投資がだいぶかかる台なので等価か持ち玉余裕あるときのみ打つ\n\n【狙い目ボーダー】\n・朝一０スの台を100G～160Gまで\n・この区間に当選した場合はそのまま天国か5スルーまで打つ\n・5スルーした時点で通常モードB以上かドキハナB以上の示唆が出てなければやめ。示唆ありなら天国まで。"
       }
@@ -336,7 +336,7 @@
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
-        const saved = localStorage.getItem('slot_app_rukoItems_v13');
+        const saved = localStorage.getItem('slot_app_rukoItems_v14');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
           try { items = JSON.parse(saved); } catch (e) { console.error(e); }
@@ -346,7 +346,7 @@
 
       const [myItems, setMyItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセット
-        const saved = localStorage.getItem('slot_app_myItems_v13');
+        const saved = localStorage.getItem('slot_app_myItems_v14');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
@@ -358,11 +358,11 @@
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v13', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v14', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v13', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v14', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
@@ -598,7 +598,7 @@
                 <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-l-blue-500">
                   <h2 className="text-sm font-black text-gray-800 mb-2 flex items-center gap-2">
                     <MessageSquare size={16} className="text-blue-500" />
-                    現環境について
+                    現環境の『立ち回り』が分かる
                   </h2>
                   <p className="text-xs text-gray-600 font-medium leading-relaxed whitespace-pre-wrap">
                     年末年始のヴヴヴ２とDUO２のバブルが終わり落ち着いた環境となりすこし厳しい時期に。{"\n"}
@@ -882,4 +882,3 @@
   </script>
 </body>
 </html>
-
