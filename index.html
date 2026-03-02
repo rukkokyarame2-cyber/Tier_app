@@ -49,13 +49,13 @@
       {
         "id": "r_kabaneri",
         "name": "カバネリ海門決戦",
-        "detail": "各種狙い目",
+        "detail": "各種狙い目（3月3日更新）",
         "tier": "新台",
         "tag": "ゾーン, 天井",
         "tagColor": "bg-cyan-400, bg-cyan-400",
         "imageUrl": "image_kabaneri.jpg",
         "link": "",
-        "memo": "【一言メモ】\n・最近流行りのモンキー型の周期台なので同じように狙う。（示唆は集計します）\n・短縮時は1周期が減算区間だと想定されるので打たない。\n\n【狙い目ボーダー】\n・周期狙い\n1周期滞在中の場合：110G～150ゾーン\n→短縮時は1周期辛いので打たない\n２周期滞在中の場合：260G～300ゾーン\n\n・短縮周期天井狙い\n2周期～天井まで\n→短縮時は1周期辛いので抜けから打つ\n\n・上位STループ狙い\nサブ液晶が海門城の台をループ抜けまで。"
+        "memo": "【一言メモ】\n・最近流行りのモンキー型の周期台なので同じように狙う。（示唆は集計します）\n・短縮時は1周期が減算区間だと想定されるので打たない。\n・ゾーン狙いはすでにRBやCZスルーしている可能性が高い2周期の方が甘くて拾いやすい\n\n【狙い目ボーダー】\n・周期狙い\n1周期滞在中の場合：110G～150ゾーン\n→短縮時は1周期辛いので打たない\n２周期滞在中の場合：\nRB0回：250G～300ゾーン\nRB1回以上：210G～300ゾーン\n\n・短縮周期天井狙い\n2周期～天井まで\n→短縮時は1周期辛いので抜けから打つ\n\n・上位STループ狙い\nサブ液晶が海門城の台をループ抜けまで。"
       },
       {
         "id": "r_ghoul",
@@ -212,6 +212,17 @@
         "memo": "【一言メモ】\n・リセット時はATまで打っても102％は出るが、1周期抜けまでに示唆なしの場合がくっと期待値が下がるのでそこで押し引きする\n\n【狙い目ボーダー】\n・リセ０G～1周期まで\nなにかしらの示唆出たらATまで続行\n①ライバルメットに変化\n②アイテム獲得\n③舟券青島（青でも可）\n④予想屋赤\n\n※1.2.4は大体天井なので釣られて続行しないように　"
       },
       {
+        "id": "r_tekken_c",
+        "name": "鉄拳",
+        "detail": "100ゾーン狙い",
+        "tier": "C",
+        "tag": "ゾーン",
+        "tagColor": "bg-cyan-400",
+        "imageUrl": "image_tekken.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n・100Gの煽りが104pt～106ptで発生するのを知らずに102ptなどで捨てられている台をよく見るのでそれを拾う。\n\n【狙い目ボーダー】\n液晶100pt～当該100ゾーン"
+      },
+      {
         "id": "r16",
         "name": "モンスターハンターライズ",
         "detail": "MMモード狙い",
@@ -348,7 +359,7 @@
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
-        const saved = localStorage.getItem('slot_app_rukoItems_v17');
+        const saved = localStorage.getItem('slot_app_rukoItems_v19');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
           try { items = JSON.parse(saved); } catch (e) { console.error(e); }
@@ -358,7 +369,7 @@
 
       const [myItems, setMyItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセット
-        const saved = localStorage.getItem('slot_app_myItems_v17');
+        const saved = localStorage.getItem('slot_app_myItems_v19');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
@@ -370,11 +381,11 @@
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v17', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v19', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v17', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v19', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
@@ -567,7 +578,7 @@
               
               <div className="flex justify-between items-end mt-1">
                 <p className="text-sm sm:text-base font-black italic leading-tight">
-                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/3/1" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
+                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/3/3" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
                 </p>
                 {activeTab === 'ruko' && (
                   <p className="text-[9px] text-red-500 whitespace-nowrap ml-2 pb-0.5 font-medium">ホールでの拾いやすさ×期待値の高さで決定</p>
