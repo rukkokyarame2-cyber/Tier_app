@@ -58,6 +58,17 @@
         "memo": "【一言メモ】\n・最近流行りのモンキー型の周期台なので同じように狙う。（示唆は集計します）\n・短縮時は1周期が減算区間だと想定されるので打たない。\n・ゾーン狙いはすでにRBやCZスルーしている可能性が高い2周期の方が甘くて拾いやすい\n\n【狙い目ボーダー】\n・周期狙い\n1周期滞在中の場合：110G～150ゾーン\n→短縮時は1周期辛いので打たない\n２周期滞在中の場合：\nRB0回：250G～300ゾーン\nRB1回以上：210G～300ゾーン\n\n・短縮周期天井狙い\n2周期～天井まで\n→短縮時は1周期辛いので抜けから打つ\n\n・上位STループ狙い\nサブ液晶が海門城の台をループ抜けまで。"
       },
       {
+        "id": "r_kabaneri2",
+        "name": "カバネリ海門決戦",
+        "detail": "上位STスタート狙い",
+        "tier": "新台",
+        "tag": "天井",
+        "tagColor": "bg-cyan-400",
+        "imageUrl": "image_kabaneri2.jpg",
+        "link": "https://note.com/ruko7613/n/n74858edb21f3",
+        "memo": "【一言メモ】\n・最近流行りのモンキー型の周期台なので同じように狙う。（示唆は集計します）\n・7G以上のAT信号が海門回想若しくはEDボーナス\n・7G以上の信号から1500枚以上獲得後の初当たりで上位STが出てきやすい。\n\n【狙い目ボーダー】\n前回AT中に7g以上の信号＋1500枚以上出ていた場合\n0G~\n（暫定版）\n前回真景之以上だった場合\n0G~"
+      },
+      {
         "id": "r_ghoul",
         "name": "東京喰種",
         "detail": "リセット０G～＆示唆打ち分け",
@@ -359,7 +370,7 @@
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
-        const saved = localStorage.getItem('slot_app_rukoItems_v19');
+        const saved = localStorage.getItem('slot_app_rukoItems_v21');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
           try { items = JSON.parse(saved); } catch (e) { console.error(e); }
@@ -369,7 +380,7 @@
 
       const [myItems, setMyItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセット
-        const saved = localStorage.getItem('slot_app_myItems_v19');
+        const saved = localStorage.getItem('slot_app_myItems_v21');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
@@ -381,11 +392,11 @@
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v19', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v21', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v19', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v21', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
