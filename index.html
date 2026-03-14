@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>スロット狙い目ティア管理アプリ</title>
   
+  <!-- ==========================================
+       ★ ホーム画面追加用（PWA）のアイコン設定 ★
+       ========================================== -->
+  <!-- iPhone/iPad用アイコン (180x180以上の正方形PNG推奨) -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  
+  <!-- Android/PC用アイコン (192x192 または 512x512の正方形PNG推奨) -->
+  <link rel="icon" type="image/png" href="apple-touch-icon.png">
+  
+  <!-- ホーム画面に追加した際、ブラウザのUIを隠してアプリのように表示する設定 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <!-- ========================================== -->
+
   <!-- Tailwind CSS の読み込み -->
   <script src="https://cdn.tailwindcss.com"></script>
   
@@ -105,11 +119,11 @@
         "id": "r4",
         "name": "北斗転生２",
         "detail": "シャッター判別",
-        "tier": "A",
+        "tier": "S",
         "tag": "リセ, ゾーン",
         "tagColor": "bg-orange-400, bg-cyan-400", // 複数タグに対応する色分け
         "imageUrl": "image_tensei2.jpg",
-        "link": "",
+        "link": "https://note.com/ruko7613/n/n8d8feeb888c9",
         "memo": "【一言メモ】\n・ゾーン外でのフェイク前兆（主にシャッター演出）発生で896あべし以内の当選濃厚\n40、168、296の前後８Gでシャッター演出が来るかで判別するのが基本だが、途中で捨てられている台はすでに判別済みの可能性高くて触れないので実質40あべしで判別するしかない。\n\n【狙い目ボーダー】\n※※リセとAT後即やめ以外すべて拾えません\n０G～48あべしまで打つ\n①シャッタ演出あり→ATまで\n②シャッター演出なし→やめ\n\n天破で40あべし付近を飛ばしてしまった場合はほかのゾーン外前兆で判別してからやめ。"
       },
       {
@@ -370,7 +384,7 @@
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
-        const saved = localStorage.getItem('slot_app_rukoItems_v21');
+        const saved = localStorage.getItem('slot_app_rukoItems_v22');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
           try { items = JSON.parse(saved); } catch (e) { console.error(e); }
@@ -380,7 +394,7 @@
 
       const [myItems, setMyItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセット
-        const saved = localStorage.getItem('slot_app_myItems_v21');
+        const saved = localStorage.getItem('slot_app_myItems_v22');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
@@ -392,11 +406,11 @@
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v21', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v22', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v21', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v22', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
