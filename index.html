@@ -61,10 +61,43 @@
     // ※画面上で編集後、Exportボタンを押してコピーされた内容をここに上書きしてください。
     const RUKO_OFFICIAL_DATA = [
       {
+        "id": "r_yoshimune",
+        "name": "真打吉宗",
+        "detail": "各種狙い目",
+        "tier": "新台",
+        "tag": "天井, ゾーン",
+        "tagColor": "bg-cyan-400, bg-cyan-400",
+        "imageUrl": "image_yoshimune.jpg",
+        "link": "https://note.com/ruko7613/n/n22deefaed744#45ab1b79-c8ef-47f9-a637-f0f0dbcf5fde",
+        "memo": "【一言メモ】\n・真BB（上位）後の短縮天井狙いが拾えるが、履歴読みが簡単なので今だけだと思う\n・奇数ポイントで周期到達後は200pt以内で周期到達に期待できるので続行できる\n・2日目に稼働飛んでいたので打てるの今だけだと思う\n\n【狙い目ボーダー】\n・AT間（CZが進んでいない場合）※1500G天井\n890G～\n・リセAT間（CZが進んでいない場合）※999G天井\n440G～\n・真BB後AT間※700G天井\n110G～\n\n・CZ間（1000G天井もしくは6周期）\n620G～もしくは5周期300pt～\n\n・ゾーン狙い\n前回奇数pt周期到達後\n→当該周期打つ（夜回りD狙い）"
+      },
+      {
+        "id": "r_yoshimune2",
+        "name": "真打吉宗",
+        "detail": "メニュー画面狙い",
+        "tier": "新台",
+        "tag": "示唆狙い",
+        "tagColor": "bg-purple-500",
+        "imageUrl": "image_yoshimune.jpg",
+        "link": "https://note.com/ruko7613/n/n22deefaed744#45ab1b79-c8ef-47f9-a637-f0f0dbcf5fde",
+        "memo": "【一言メモ】\n・現時点では詳細が出ていないのでライバルが少ない\n・周期が変わるとメニュー画面も変わることがあるので要チェック格上げはあるが格下げはない\n\n【狙い目ボーダー】\nメニュー画面は背景で強弱が分かりそう\n白黒＜青＜緑＜ピンク？\n・1周期目に緑出て天井言ったのでB以上とかでは無さそう\n・ピンクは当該周期で当たった\n\n・背景緑\n3周期300pt～\n・背景ピンク\n当該CZまで\n\n青は打たない"
+      },
+      {
+        "id": "r_jormungand",
+        "name": "ヨルムンガンド",
+        "detail": "天井狙い",
+        "tier": "新台",
+        "tag": "天井",
+        "tagColor": "bg-cyan-400",
+        "imageUrl": "image_jormungand.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n・リセ後と上位CZ失敗後は450G天井になる\n・下位後でも450Gの仮天振り分けが35％以上あるのでゾーン狙いできる\n・上位CZ後は液晶とデータがずれるので見抜ける\n（喰種の有馬ジャッジメント失敗後と同じ）\n\n【狙い目ボーダー】\n・リセ後・上位CZ失敗後※450G天井\n160G～\n・上位CZ失敗後※450G天井\n200G～\n\n・下位AT後\n天井狙い：650G～\nゾーン狙い：400G～450Gの前兆抜けまで"
+      },
+      {
         "id": "r_kabaneri",
         "name": "カバネリ海門決戦",
         "detail": "各種狙い目（3月3日更新）",
-        "tier": "新台",
+        "tier": "C",
         "tag": "ゾーン, 天井",
         "tagColor": "bg-cyan-400, bg-cyan-400",
         "imageUrl": "image_kabaneri.jpg",
@@ -75,7 +108,7 @@
         "id": "r_kabaneri2",
         "name": "カバネリ海門決戦",
         "detail": "上位STスタート狙い",
-        "tier": "新台",
+        "tier": "B",
         "tag": "天井",
         "tagColor": "bg-cyan-400",
         "imageUrl": "image_kabaneri2.jpg",
@@ -119,7 +152,7 @@
         "id": "r3",
         "name": "鉄拳６",
         "detail": "スルー回数狙い",
-        "tier": "A",
+        "tier": "B",
         "tag": "スルー",
         "tagColor": "bg-blue-400",
         "imageUrl": "image_tekken.jpg",
@@ -130,7 +163,7 @@
         "id": "r5",
         "name": "L範馬刃牙",
         "detail": "スルー狙い",
-        "tier": "B",
+        "tier": "C",
         "tag": "スルー",
         "tagColor": "bg-orange-400",
         "imageUrl": "image_baki.jpg",
@@ -284,7 +317,7 @@
         "id": "r19",
         "name": "沖ドキDUOアンコール",
         "detail": "チャンスモードゾーン狙い",
-        "tier": "その他狙い目",
+        "tier": "B",
         "tag": "リセ",
         "tagColor": "bg-orange-400",
         "imageUrl": "image_okidokiduo.jpg",
@@ -384,7 +417,7 @@
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
-        const saved = localStorage.getItem('slot_app_rukoItems_v25');
+        const saved = localStorage.getItem('slot_app_rukoItems_v35');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
           try { items = JSON.parse(saved); } catch (e) { console.error(e); }
@@ -394,7 +427,7 @@
 
       const [myItems, setMyItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセット
-        const saved = localStorage.getItem('slot_app_myItems_v25');
+        const saved = localStorage.getItem('slot_app_myItems_v35');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
@@ -406,11 +439,11 @@
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v25', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v35', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v25', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v35', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
@@ -603,7 +636,7 @@
               
               <div className="flex justify-between items-end mt-1">
                 <p className="text-sm sm:text-base font-black italic leading-tight">
-                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/3/24" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
+                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/4/8" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
                 </p>
                 {activeTab === 'ruko' && (
                   <p className="text-[9px] text-red-500 whitespace-nowrap ml-2 pb-0.5 font-medium">ホールでの拾いやすさ×期待値の高さで決定</p>
@@ -649,9 +682,12 @@
                     現環境について
                   </h2>
                   <p className="text-xs text-gray-600 font-medium leading-relaxed whitespace-pre-wrap">
-                    転生のリセG前兆狙い（シャッター狙い）を２００台以上打った結果AT後の差枚による続行が思ったより強く１０８％を超えてきた。{"\n"}
-                    １台を長く打てる可能性も考慮すると喰種リセよりも優秀な可能性も。{"\n"}
-                    昼以降も勝つ目的だけなら転生以外を打つ理由があまりない。
+                    4月の新台は打ち手の評価が悪いものしかないので、客付きが悪くむしろ今拾いやすい。{"\n"}
+                    再来週には動いてないかも。{"\n"}
+                    逆に人気だったカバネリの稼働も落ち着いてきて、拾いやすくなっている印象。{"\n"}
+                    また、DUO2についても先月より拾えている。{"\n"}
+                    エナが転生2に拘束されているのと、環境的に色んな機種が満遍なく拾えている。{"\n"}
+                    4月は稼働しやすそうかな？
                   </p>
                 </div>
                 {/* ---------------------------------- */}
