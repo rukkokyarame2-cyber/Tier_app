@@ -61,10 +61,43 @@
     // ※画面上で編集後、Exportボタンを押してコピーされた内容をここに上書きしてください。
     const RUKO_OFFICIAL_DATA = [
       {
+        "id": "r_rioace2",
+        "name": "リオエース２",
+        "detail": "各種狙い目",
+        "tier": "新台",
+        "tag": "天井, ゾーン",
+        "tagColor": "bg-cyan-400, bg-cyan-400",
+        "imageUrl": "image_rioace2.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n・リセ区間に関してはボナスルー天井が7スから4スに短縮されているためそこを軸に\n・通常区間に関してはマギレコと同じでAT間2000をまたぐと穢れ獲得が大幅にあがるのでそれを軸に\n\n【狙い目ボーダー】\n・リセ→スルー天井を視野に\n0ス→220G～※天井500G＋α\n1～2ス→450G～※天井750G＋α\n3ス→320G～\n4ス→0G～\n\n・リセ以外→AT間2000踏めるかを視野に\nスルー不問:AT間2000G～ATまで\n6ス:320G～\n7ス:0G～\n\n・ゾーン狙い\n290～300ゾーン\n\n・エースモード狙い\nテイル/アリス/ノワール\n０G～\nナヴィ/ヴィヴィアン\n190G～\n\n・ヤメ時: 即ヤメ推奨"
+      },
+      {
+        "id": "r_bio_re3",
+        "name": "バイオハザードRE:3",
+        "detail": "各種狙い目",
+        "tier": "新台",
+        "tag": "天井",
+        "tagColor": "bg-cyan-400",
+        "imageUrl": "image_biore3.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n・連荘最後の1RBをスルーカウントしないよう注意\n・スルーで狙うよりAT間で狙うことのが多そう\n【狙い目ボーダー】\nCZポイント100以下想定\n・リセ\nAT間230G～※天井650G\n・リセ以外\nAT間570G～※天井1000G\n\n・スルー天井狙い\n4スルー～※天井6スルー\n\n・上位後0スNEポイント狙い\n０G～※NEポイント天井100pt\n実Gと液晶Gずれるので判別可能"
+      },
+      {
+        "id": "r_bigdream",
+        "name": "ビッグドリーム",
+        "detail": "穢れ＆天井狙い",
+        "tier": "S",
+        "tag": "天井, 穢れ",
+        "tagColor": "bg-cyan-400, bg-purple-500",
+        "imageUrl": "image_bigdream.jpg",
+        "link": "https://note.com/ruko7613/n/neb076b7a1911",
+        "memo": "【一言メモ】\n※めちゃくちゃ拾えるがボーダー調整要素多いので注意\n\n【ボーダー調整要素※優先度順】\n①差枚凹み\n差枚凸の場合せっかく4桁乗せしても取り切れないことあるし切断弱いので✖\n2000枚以上凹んでいることが大事\n②ボール状況\n後ろの方に青が固まっているときは抽選受けるまで時間かかりすぎるので100G以上辛く見た方がいい\n③直撃間G数\nボール天井に到達すると直撃信号上がることが多いので当日に直撃している場合はボーダー上げた方が良い。\n通常G数2000～4000で解放しやすいのでそこをできれば打ちたい\n④前回AT枚数\n前回駆け抜け後だと次回AT性能が上がりやすい。BB信号が3追加なら駆け抜けなのでボーダー100下げる\n⑤ドリームメーター色\n紫ならボーダー下げれるが赤以下は無視で言いい\n\n【狙い目ボーダー】\n基本駆け抜け後200G～、それ以外400G～として上記項目を使って調整する。\n\n例えば\n①差枚2000以上凹み　100G甘くする\n②ボール青しかなく奥ばかり　100G辛くする\n③直撃間通常Gが2000G　100G甘くする\n④非駆け抜け後　400Gを基準にする\n⑤ドリームメーター黄色　50G辛くする\nなら\n350G~みたいな感じ。\n\nここの調整は自分も調査中なので各自打感強めたり情報収集して自分の中で納得できるように。"
+      },
+      {
         "id": "r_godkiseki",
         "name": "Lゴッド軌跡",
         "detail": "優遇天井狙い",
-        "tier": "新台",
+        "tier": "A",
         "tag": "優遇, 天井",
         "tagColor": "bg-red-500, bg-cyan-400",
         "imageUrl": "image_godkiseki.jpg",
@@ -75,7 +108,7 @@
         "id": "r_animal",
         "name": "Lアニマルドッチ",
         "detail": "ST間天井狙い",
-        "tier": "新台",
+        "tier": "C",
         "tag": "ゾーン, 天井",
         "tagColor": "bg-cyan-400, bg-cyan-400",
         "imageUrl": "image_animal.jpg",
@@ -86,18 +119,18 @@
         "id": "r_yoshimune",
         "name": "真打吉宗",
         "detail": "各種狙い目",
-        "tier": "C",
+        "tier": "B",
         "tag": "天井, ゾーン",
         "tagColor": "bg-cyan-400, bg-cyan-400",
         "imageUrl": "image_yoshimune.jpg",
         "link": "https://note.com/ruko7613/n/n22deefaed744#45ab1b79-c8ef-47f9-a637-f0f0dbcf5fde",
-        "memo": "【一言メモ】\n・真BB（上位）後の短縮天井狙いが拾えるが、履歴読みが簡単なので今だけだと思う\n・奇数ポイントで周期到達後は200pt以内で周期到達に期待できるので続行できる\n・2日目に稼働飛んでいたので打てるの今だけだと思う\n\n【狙い目ボーダー】\n・AT間（CZが進んでいない場合）※1500G天井\n890G～\n・リセAT間（CZが進んでいない場合）※999G天井\n440G～\n・真BB後AT間※700G天井\n110G～\n\n・CZ間（1000G天井もしくは6周期）\n620G～もしくは5周期300pt～\n\n・ゾーン狙い\n前回奇数pt周期到達後\n→当該周期打つ（夜回りD狙い）"
+        "memo": "【一言メモ】\n・真BB（上位）後の短縮天井狙いが拾えるが、履歴読みが簡単なので今だけだと思う\n→差枚1000枚以下の状態から打ち始めないと冷遇ひどいので注意\n・奇数ポイントで周期到達後は200pt以内で周期到達に期待できるので続行できる\n・2日目に稼働飛んでいたので打てるの今だけだと思う\n\n【狙い目ボーダー】\n・AT間（CZが進んでいない場合）※1500G天井\n810G～\n・リセAT間（CZが進んでいない場合）※999G天井\n310G～\n・真BB後AT間※700G天井\n差枚1000枚以下\n0G～\n差枚1001枚以上\n290G～\n\n・CZ間（1000G天井もしくは6周期）\n620G～もしくは5周期0pt～\n\n・ゾーン狙い\n前回奇数pt周期到達後\n→当該周期打つ（夜回りD狙い）"
       },
       {
         "id": "r_yoshimune2",
         "name": "真打吉宗",
         "detail": "メニュー画面狙い",
-        "tier": "C",
+        "tier": "B",
         "tag": "示唆狙い",
         "tagColor": "bg-purple-500",
         "imageUrl": "image_yoshimune.jpg",
@@ -174,7 +207,7 @@
         "id": "r3",
         "name": "鉄拳６",
         "detail": "スルー回数狙い",
-        "tier": "B",
+        "tier": "C",
         "tag": "スルー",
         "tagColor": "bg-blue-400",
         "imageUrl": "image_tekken.jpg",
@@ -229,7 +262,7 @@
         "id": "r10",
         "name": "攻殻機動隊",
         "detail": "優遇狙い",
-        "tier": "B",
+        "tier": "C",
         "tag": "優遇",
         "tagColor": "bg-red-500",
         "imageUrl": "image_kidoutai.jpg",
@@ -439,7 +472,7 @@
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
-        const saved = localStorage.getItem('slot_app_rukoItems_v38');
+        const saved = localStorage.getItem('slot_app_rukoItems_v46');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
           try { items = JSON.parse(saved); } catch (e) { console.error(e); }
@@ -449,7 +482,7 @@
 
       const [myItems, setMyItems] = useState(() => {
         // ★キー名を変更して古いキャッシュをリセット
-        const saved = localStorage.getItem('slot_app_myItems_v38');
+        const saved = localStorage.getItem('slot_app_myItems_v46');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
@@ -461,11 +494,11 @@
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v38', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v46', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v38', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v46', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
@@ -658,7 +691,7 @@
               
               <div className="flex justify-between items-end mt-1">
                 <p className="text-sm sm:text-base font-black italic leading-tight">
-                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/4/30" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
+                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/5/23" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
                 </p>
                 {activeTab === 'ruko' && (
                   <p className="text-[9px] text-red-500 whitespace-nowrap ml-2 pb-0.5 font-medium">ホールでの拾いやすさ×期待値の高さで決定</p>
@@ -704,8 +737,10 @@
                     現環境について
                   </h2>
                   <p className="text-xs text-gray-600 font-medium leading-relaxed whitespace-pre-wrap">
-                    転生1強なのは変わらないが、新台2機種も結構拾えて全体的に良環境。（ユニコーンはどうしようも無さそう）{"\n\n"}
-                    転生、喰種、ゴッド＆ドッチで7割ぐらいは稼働の枠占めれそう。
+                    朝～昼は転生でいいことには変わらず。{"\n\n"}
+                    ゴッドとビッグドリームという荒い台2機種がばんばん打てるところで辞められていくのでずっと拾えるし純増も早いので兼業でもやりやすそう。{"\n\n"}
+                    喰種穢れも相変わらずよく拾える（駆け抜け後がB以上という解析が出てよりモード看破も楽になった）{"\n\n"}
+                    真打吉宗がメニュー画面や周期の色が意外と見過ごされがちなので意外と拾える。
                   </p>
                 </div>
                 {/* ---------------------------------- */}
