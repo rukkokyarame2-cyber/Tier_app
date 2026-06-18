@@ -8,13 +8,8 @@
   <!-- ==========================================
        ★ ホーム画面追加用（PWA）のアイコン設定 ★
        ========================================== -->
-  <!-- iPhone/iPad用アイコン (180x180以上の正方形PNG推奨) -->
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  
-  <!-- Android/PC用アイコン (192x192 または 512x512の正方形PNG推奨) -->
   <link rel="icon" type="image/png" href="apple-touch-icon.png">
-  
-  <!-- ホーム画面に追加した際、ブラウザのUIを隠してアプリのように表示する設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <!-- ========================================== -->
@@ -22,6 +17,9 @@
   <!-- Tailwind CSS の読み込み -->
   <script src="https://cdn.tailwindcss.com"></script>
   
+  <!-- ES Module Shims (古いスマホブラウザでの importmap 対応のための安全装置) -->
+  <script async src="https://unpkg.com/es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+
   <!-- JSXをブラウザで実行するためのBabelコンパイラ -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
@@ -51,21 +49,39 @@
 
     // =========================================================================
     // ★ 管理者モード設定
-    // false にすると、Ruko App も画面上で編集（追加・移動・リンク変更など）が可能になります。
-    // 一般公開する際は、ここを false に書き換えてください。
-    // =========================================================================
     const IS_ADMIN_MODE = false; 
 
     const DEFAULT_MEMO_TEMPLATE = "【一言メモ】\n\n\n【狙い目ボーダー】\n";
 
-    // Rukoさんの公式データ (2026/1/29 最新版)
-    // ※画面上で編集後、Exportボタンを押してコピーされた内容をここに上書きしてください。
+    // Rukoさんの公式データ
     const RUKO_OFFICIAL_DATA = [
+      {
+        "id": "r_otome5",
+        "name": "乙女５",
+        "detail": "差枚狙い",
+        "tier": "新台",
+        "tag": "差枚",
+        "tagColor": "bg-yellow-400",
+        "imageUrl": "image_otome5.jpg",
+        "link": "https://note.com/ruko7613/n/nc73f5964c00f",
+        "memo": "【一言メモ】\n・ほぼモンキー\n・冷遇挙動は無いので差枚×1周期狙い\n\n【狙い目ボーダー】\n・記事を参考に差枚＋500枚以上を1周期見て、示唆で打ち分ける"
+      },
+      {
+        "id": "r_sao2",
+        "name": "SAO２",
+        "detail": "調査中",
+        "tier": "新台",
+        "tag": "調査中",
+        "tagColor": "bg-gray-400",
+        "imageUrl": "image_sao2.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n・現在液晶情報収集中\n\n・上位後（ウルティマ後）の謎ストックATはコンプ対策のミミズ区間なだけで狙い目にならないと予想。\n\n【狙い目ボーダー】\n調査中"
+      },
       {
         "id": "r_rioace2",
         "name": "リオエース２",
         "detail": "各種狙い目",
-        "tier": "新台",
+        "tier": "C",
         "tag": "天井, ゾーン",
         "tagColor": "bg-cyan-400, bg-cyan-400",
         "imageUrl": "image_rioace2.jpg",
@@ -76,7 +92,7 @@
         "id": "r_bio_re3",
         "name": "バイオハザードRE:3",
         "detail": "各種狙い目",
-        "tier": "新台",
+        "tier": "C",
         "tag": "天井",
         "tagColor": "bg-cyan-400",
         "imageUrl": "image_biore3.jpg",
@@ -87,7 +103,7 @@
         "id": "r_bigdream",
         "name": "ビッグドリーム",
         "detail": "穢れ＆天井狙い",
-        "tier": "S",
+        "tier": "B",
         "tag": "天井, 穢れ",
         "tagColor": "bg-cyan-400, bg-purple-500",
         "imageUrl": "image_bigdream.jpg",
@@ -98,23 +114,12 @@
         "id": "r_godkiseki",
         "name": "Lゴッド軌跡",
         "detail": "優遇天井狙い",
-        "tier": "A",
+        "tier": "S",
         "tag": "優遇, 天井",
         "tagColor": "bg-red-500, bg-cyan-400",
         "imageUrl": "image_godkiseki.jpg",
         "link": "https://note.com/ruko7613/n/n1c7e8a0e9876",
         "memo": "【一言メモ】\n・かぐやと同じような優遇狙いが可能\n\n【狙い目ボーダー】\n・記事をご確認ください"
-      },
-      {
-        "id": "r_animal",
-        "name": "Lアニマルドッチ",
-        "detail": "ST間天井狙い",
-        "tier": "C",
-        "tag": "ゾーン, 天井",
-        "tagColor": "bg-cyan-400, bg-cyan-400",
-        "imageUrl": "image_animal.jpg",
-        "link": "https://note.com/ruko7613/n/n6bd24beffa09",
-        "memo": "【一言メモ】\n・解析にないST間天井が存在する（2500G～）\n・高確狙いが結構強い\n\n【狙い目ボーダー】\n・ST間1300G～ST当選まで\n（2500G以降のレア役で金チケ3枚のボナに当選するしようかと思われる）\n\n・やめどき\nST後に高確落ちまで（なにも引かなければ18Gまで）"
       },
       {
         "id": "r_yoshimune",
@@ -137,6 +142,17 @@
         "imageUrl": "image_yoshimune.jpg",
         "link": "https://note.com/ruko7613/n/n22deefaed744#45ab1b79-c8ef-47f9-a637-f0f0dbcf5fde",
         "memo": "【一言メモ】\n・現時点では詳細が出ていないのでライバルが少ない\n・周期が変わるとメニュー画面も変わることがあるので要チェック格上げはあるが格下げはない\n\n【狙い目ボーダー】\nメニュー画面は背景で強弱が分かりそう\n白黒＜青＜緑＜ピンク？\n・1周期目に緑出て天井言ったのでB以上とかでは無さそう\n・ピンクは当該周期で当たった\n\n・背景緑\n3周期300pt～\n・背景ピンク\n当該CZまで\n\n青は打たない"
+      },
+      {
+        "id": "r_yoshimune3",
+        "name": "真打吉宗",
+        "detail": "天国狙い",
+        "tier": "A",
+        "tag": "ゾーン",
+        "tagColor": "bg-cyan-400",
+        "imageUrl": "image_yoshimune.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n・差枚-3000枚以下の1周期を打てる。\n→差枚マイナスの際に１G連が獲得しやすいので1回目のBB後にまだ差枚マイナスなことに期待できるぐらい凹んでることが条件\n\n・天国示唆が全然でないので前任者気にしなくていい\n\n【狙い目ボーダー】\n差枚－3000枚以下\nAT後0G～1周期"
       },
       {
         "id": "r_jormungand",
@@ -205,28 +221,6 @@
         "memo": "【一言メモ】\n・内部ポイントを正確に履歴読みできている人が少なくライバルがあまりいないので半年以上ずっと拾えている。\n\n・前回AT前のCZ当選ゲームや当該示唆などボーダー調整要素多いので細かいところは打感を身に着けて判断するように。\n\n・穢れの開放期待度は\n9pt～12ptが各20％前後\n8ptと13ptが各10％前後\n7pt以下はほぼ0％\n13pt以降もほぼなく20ptぐらいまで来るとたまに開放する←狙えはしない\n\n・差枚は1500枚以上へこみがボーダー凹んでいればいるほど強い\n\n\n【狙い目ボーダー】\nAT駆け抜け後;内部ポイント9pt若しくは10pt～\n\n※解放の振り分けが9pt～12ptに固まっているので自分でCZをスルーするたびに抽選を受けられる9ptなどが強いのであって12ptからだと12ptのにしか抽選を受けられないので弱い。\n\n☆50G示唆\n・2.4.6→即やめ\n・喰うか喰われるか→天国ゾーン抜けやめ\n・デフォルト→続行\n☆前回モード\nAT後も前回モード高い後の方が高モード来やすいので、前回AT前がCZ当選300G以下のものの方が強い。"
       },
       {
-        "id": "r3",
-        "name": "鉄拳６",
-        "detail": "スルー回数狙い",
-        "tier": "C",
-        "tag": "スルー",
-        "tagColor": "bg-blue-400",
-        "imageUrl": "image_tekken.jpg",
-        "link": "",
-        "memo": "【一言メモ】\n・鉄拳６はスルー天井の浅さに機械割を割かれているのでそこを狙いたい。\n\n・差枚で上位狙うより凹み上げする喰種的な狙い方のが勝ちやすい\n\n【狙い目ボーダー】\n・リセ\n0ス⇒220pt～\n1ス以降⇒0G～\n\n・リセ以外\n2ス⇒0G～\n\n・ヤメ時: 即ヤメ推奨"
-      },
-      {
-        "id": "r5",
-        "name": "L範馬刃牙",
-        "detail": "スルー狙い",
-        "tier": "C",
-        "tag": "スルー",
-        "tagColor": "bg-orange-400",
-        "imageUrl": "image_baki.jpg",
-        "link": "",
-        "memo": "【一言メモ】\n示唆がいっさい無く、液晶ポイントの加算などもない最近珍しい台なので期待値表鵜呑みにしていい。\n\n【狙い目ボーダー】\n・4スルー；40G～ATまで\n・5スルー以降：0Ｇ～ATまで\n\n・やめどき\nAT後は引き戻しを見ずに即やめでいいが、引き戻した場合は連荘数を引き継ぐので8連以上していれば引き戻しも見る。\n掘られるのがどうしても嫌なら16Ｇ程度なので回してもいい。"
-      },
-      {
         "id": "r6",
         "name": "ヴヴヴ２",
         "detail": "優遇モード狙い",
@@ -271,17 +265,6 @@
         "memo": "【一言メモ】\n・優遇があるので今は拾えるが台数も少なく尻すぼみしていきそう\n\n【狙い目ボーダー】\n記事の方からご確認ください。"
       },
       {
-        "id": "r11",
-        "name": "L範馬刃牙",
-        "detail": "ゾーン狙い",
-        "tier": "C",
-        "tag": "ゾーン",
-        "tagColor": "bg-cyan-400",
-        "imageUrl": "image_baki.jpg",
-        "link": "",
-        "memo": "【一言メモ】\n示唆がいっさい無く、液晶ポイントの加算などもない最近珍しい台なので期待値表鵜呑みにしていい。\n\n【狙い目ボーダー】\n・スルー不問：130G～200ゾーン\n\n・やめどき\nAT後は引き戻しを見ずに即やめでいいが、引き戻した場合は連荘数を引き継ぐので8連以上していれば引き戻しも見る。\n掘られるのがどうしても嫌なら16Ｇ程度なので回してもいい。"
-      },
-      {
         "id": "r12",
         "name": "かぐや様",
         "detail": "優遇狙い",
@@ -324,17 +307,6 @@
         "imageUrl": "image_monkey.jpg",
         "link": "",
         "memo": "【一言メモ】\n・リセット時はATまで打っても102％は出るが、1周期抜けまでに示唆なしの場合がくっと期待値が下がるのでそこで押し引きする\n\n【狙い目ボーダー】\n・リセ０G～1周期まで\nなにかしらの示唆出たらATまで続行\n①ライバルメットに変化\n②アイテム獲得\n③舟券青島（青でも可）\n④予想屋赤\n\n※1.2.4は大体天井なので釣られて続行しないように　"
-      },
-      {
-        "id": "r_tekken_c",
-        "name": "鉄拳",
-        "detail": "100ゾーン狙い",
-        "tier": "C",
-        "tag": "ゾーン",
-        "tagColor": "bg-cyan-400",
-        "imageUrl": "image_tekken.jpg",
-        "link": "",
-        "memo": "【一言メモ】\n・100Gの煽りが104pt～106ptで発生するのを知らずに102ptなどで捨てられている台をよく見るのでそれを拾う。\n\n【狙い目ボーダー】\n液晶100pt～当該100ゾーン"
       },
       {
         "id": "r16",
@@ -424,7 +396,6 @@
         }
       };
 
-      // 安全にタグの配列を取得する処理（データが欠落していてもクラッシュさせないため）
       const safeTag = tag || "";
       const tagsArray = Array.isArray(safeTag) ? safeTag : safeTag.toString().split(',');
 
@@ -474,42 +445,44 @@
     const App = () => {
       const [activeTab, setActiveTab] = useState('ruko'); 
       
-      // 自動保存されたデータを読み込む
+      // 自動保存されたデータを読み込む (try-catchで包んでスマホ特有の保存エラーによるクラッシュを防止)
       const [rukoItems, setRukoItems] = useState(() => {
-        // ★クラッシュ原因になる古いキャッシュをリセットするためバージョンを v47 に変更
-        const saved = localStorage.getItem('slot_app_rukoItems_v47');
         let items = RUKO_OFFICIAL_DATA;
-        if (saved) {
-          try { 
+        try {
+          const saved = localStorage.getItem('slot_app_rukoItems_v53');
+          if (saved) {
             const parsed = JSON.parse(saved); 
             if(Array.isArray(parsed)) items = parsed;
-          } catch (e) { console.error(e); }
-        }
+          }
+        } catch (e) { console.error("データ読み込みエラー:", e); }
         return items.filter(item => item).map(item => ({ ...item, memo: item.memo || DEFAULT_MEMO_TEMPLATE }));
       });
 
       const [myItems, setMyItems] = useState(() => {
-        // ★クラッシュ原因になる古いキャッシュをリセットするためバージョンを v47 に変更
-        const saved = localStorage.getItem('slot_app_myItems_v47');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
-        if (saved) {
-          try { 
+        try {
+          const saved = localStorage.getItem('slot_app_myItems_v53');
+          if (saved) {
             const parsed = JSON.parse(saved); 
             if(Array.isArray(parsed)) items = parsed;
-          } catch (e) { console.error(e); }
-        }
+          }
+        } catch (e) { console.error("データ読み込みエラー:", e); }
         return items.filter(item => item).map(item => ({ ...item, memo: item.memo || DEFAULT_MEMO_TEMPLATE }));
       });
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v47', JSON.stringify(rukoItems));
+        try {
+          localStorage.setItem('slot_app_rukoItems_v53', JSON.stringify(rukoItems));
+        } catch (e) { console.warn("シークレットモード等により保存できませんでした", e); }
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v47', JSON.stringify(myItems));
+        try {
+          localStorage.setItem('slot_app_myItems_v53', JSON.stringify(myItems));
+        } catch (e) { console.warn("シークレットモード等により保存できませんでした", e); }
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
@@ -518,28 +491,22 @@
       const [searchQuery, setSearchQuery] = useState('');
       const [showToast, setShowToast] = useState(null);
 
-      // --- 追加：詳細確認モーダル用の状態管理 ---
       const [detailModalConfig, setDetailModalConfig] = useState({ isOpen: false, item: null });
       const [isMemoEditing, setIsMemoEditing] = useState(false);
       const [editingMemoText, setEditingMemoText] = useState('');
 
-      // --- 追加：モーダル用の状態管理 ---
       const [modalConfig, setModalConfig] = useState({ isOpen: false, mode: 'add', itemId: null });
       const [formData, setFormData] = useState({ name: '', detail: '', tag: '', imageUrl: '', link: '', memo: '' });
-      // ---------------------------------
 
       const currentItems = activeTab === 'ruko' ? rukoItems : myItems;
 
-      // エクスポート機能（編集内容をコードに書き出す用）
       const exportData = () => {
         const dataStr = JSON.stringify(rukoItems, null, 2);
-        // クリップボードにコピー
         navigator.clipboard.writeText(dataStr).then(() => {
           triggerToast("JSONデータをコピーしました！コードの RUKO_OFFICIAL_DATA に貼り付けてください。");
         }).catch(err => {
           console.error("Clipboard copy failed:", err);
           triggerToast("コピー失敗。コンソールからデータを取得してください。");
-          console.log(dataStr);
         });
       };
 
@@ -569,7 +536,6 @@
         if (draggedItemId) moveItem(draggedItemId, tierId);
       };
 
-      // 既存カードの編集機能 (モーダルを開く)
       const openEditModal = (id) => {
         const isRuko = activeTab === 'ruko';
         const targetList = isRuko ? rukoItems : myItems;
@@ -587,13 +553,11 @@
         setModalConfig({ isOpen: true, mode: 'edit', itemId: id });
       };
 
-      // 新規追加 (モーダルを開く)
       const openAddModal = () => {
         setFormData({ name: '', detail: '', tag: '', imageUrl: '', link: '', memo: DEFAULT_MEMO_TEMPLATE });
         setModalConfig({ isOpen: true, mode: 'add', itemId: null });
       };
 
-      // フォームの保存処理
       const handleModalSave = () => {
         if (!formData.name) {
           triggerToast('機種名を入力してください');
@@ -624,7 +588,6 @@
         setModalConfig({ isOpen: false, mode: 'add', itemId: null });
       };
 
-      // フォームを閉じる処理
       const handleModalClose = () => {
         setModalConfig({ isOpen: false, mode: 'add', itemId: null });
       };
@@ -652,7 +615,6 @@
         }
       };
 
-      // キャッシュのデータ欠落でクラッシュしないよう安全にtoLowerCaseを呼ぶ
       const filteredItems = currentItems.filter(item => 
         (item.name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
         (item.detail && item.detail.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -663,7 +625,6 @@
         (item.detail && item.detail.toLowerCase().includes(searchQuery.toLowerCase()))
       );
 
-      // ドラッグ可能かどうかの判定（My Tier は常時可、Ruko's は管理者かつ編集モード時のみ）
       const canDrag = activeTab === 'my' || (activeTab === 'ruko' && IS_ADMIN_MODE && isEditing);
 
       return (
@@ -678,7 +639,6 @@
                 </h1>
                 
                 <div className="flex gap-2">
-                  {/* エクスポートボタン (管理者モードのみ表示) */}
                   {activeTab === 'ruko' && IS_ADMIN_MODE && isEditing && (
                     <button 
                       onClick={exportData}
@@ -689,7 +649,6 @@
                     </button>
                   )}
 
-                  {/* 編集トグルボタン */}
                   {(activeTab === 'my' || (activeTab === 'ruko' && IS_ADMIN_MODE)) && (
                     <button 
                       onClick={() => setIsEditing(!isEditing)}
@@ -703,7 +662,7 @@
               
               <div className="flex justify-between items-end mt-1">
                 <p className="text-sm sm:text-base font-black italic leading-tight">
-                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/5/23" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
+                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/6/19" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
                 </p>
                 {activeTab === 'ruko' && (
                   <p className="text-[9px] text-red-500 whitespace-nowrap ml-2 pb-0.5 font-medium">ホールでの拾いやすさ×期待値の高さで決定</p>
@@ -742,20 +701,19 @@
               </div>
             ) : (
               <div className="space-y-6">
-                {/* --- 追加：現環境についてパネル --- */}
                 <div className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-l-blue-500">
                   <h2 className="text-sm font-black text-gray-800 mb-2 flex items-center gap-2">
                     <MessageSquare size={16} className="text-blue-500" />
                     現環境について
                   </h2>
                   <p className="text-xs text-gray-600 font-medium leading-relaxed whitespace-pre-wrap">
-                    朝～昼は転生でいいことには変わらず。{"\n\n"}
-                    ゴッドとビッグドリームという荒い台2機種がばんばん打てるところで辞められていくのでずっと拾えるし純増も早いので兼業でもやりやすそう。{"\n\n"}
-                    喰種穢れも相変わらずよく拾える（駆け抜け後がB以上という解析が出てよりモード看破も楽になった）{"\n\n"}
-                    真打吉宗がメニュー画面や周期の色が意外と見過ごされがちなので意外と拾える。
+                    転生リセのこなせる台数減ってきたので、喰種リセも混ぜる必要が出てきた。{"\n\n"}
+                    昼以降はGODのベースが良い店で優遇狙いするのが一番強いのでこれに頼る。{"\n\n"}
+                    カバネリが未だに一番人気だが、エナ機としては弱くて渋い。{"\n\n"}
+                    乙女は差枚狙いしかやることない。{"\n"}
+                    SAO2は何か狙えそうなので調査中。
                   </p>
                 </div>
-                {/* ---------------------------------- */}
 
                 {TIER_CONFIG.map((tier) => (
                   <div 
@@ -791,7 +749,6 @@
                             {item.detail}
                           </div>
 
-                          {/* 編集・削除ボタン */}
                           {(activeTab === 'my' || (activeTab === 'ruko' && IS_ADMIN_MODE)) && isEditing && (
                             <div className="absolute top-1 right-1 flex flex-col gap-1 z-20">
                               <button 
