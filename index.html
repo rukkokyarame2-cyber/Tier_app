@@ -33,6 +33,7 @@
     {
       "imports": {
         "react": "https://esm.sh/react@18.2.0",
+        "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
         "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
         "lucide-react": "https://esm.sh/lucide-react@0.292.0"
       }
@@ -176,7 +177,7 @@
         "detail": "シャッター判別",
         "tier": "S",
         "tag": "リセ, ゾーン, 差枚",
-        "tagColor": "bg-orange-400, bg-cyan-400, bg-yellow-400", // 複数タグに対応する色分け
+        "tagColor": "bg-orange-400, bg-cyan-400, bg-yellow-400",
         "imageUrl": "image_tensei2.jpg",
         "link": "https://note.com/ruko7613/n/n8d8feeb888c9",
         "memo": "【一言メモ】\n・ゾーン外でのフェイク前兆（主にG数前兆）発生で896あべし以内の当選濃厚\n40、168、296の前後８GでG数前兆が来るかで判別するのが基本だが、途中で捨てられている台はすでに判別済みの可能性高くて触れないので実質40あべしで判別するしかない。\n・リセでは０～３０あべし短縮されるが２０短縮の選択率が最も高い\n\n【狙い目ボーダー】\n※リセとAT後即やめ以外すべて拾えません\n０G～４１あべしまで打つ\n①G数前兆あり→ATまで\n②G数前兆なし→やめ\n\n天破で40あべし付近を飛ばしてしまった場合はほかのゾーン外前兆で判別してからやめ。\n\nAT後に関しては差枚－１０００枚以上凹んでいなければ同様に打つ。\n差枚切断が大事な台なので凹まない限りは追うこと。"
@@ -423,13 +424,17 @@
         }
       };
 
+      // 安全にタグの配列を取得する処理（データが欠落していてもクラッシュさせないため）
+      const safeTag = tag || "";
+      const tagsArray = Array.isArray(safeTag) ? safeTag : safeTag.toString().split(',');
+
       return (
         <div className="h-28 relative overflow-hidden bg-neutral-900 flex flex-col justify-end">
           {currentUrl && !error ? (
             <img 
               key={currentUrl} 
               src={currentUrl} 
-              alt={name} 
+              alt={name || "image"} 
               className="absolute inset-0 w-full h-full object-cover opacity-90 transition-opacity duration-300"
               onError={handleError}
             />
@@ -448,9 +453,9 @@
 
           <div className="relative z-10 px-2 pb-1">
             <p className="text-[10px] text-white font-black leading-tight drop-shadow-md truncate">{name}</p>
-            {tag && (
+            {safeTag && safeTag.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1">
-                {(Array.isArray(tag) ? tag : tag.split(',')).map((t, idx) => {
+                {tagsArray.map((t, idx) => {
                   const colors = tagColor ? tagColor.split(',') : [];
                   const color = colors[idx] ? colors[idx].trim() : (colors[0] || 'bg-white');
                   return (
@@ -471,34 +476,40 @@
       
       // 自動保存されたデータを読み込む
       const [rukoItems, setRukoItems] = useState(() => {
-        // ★キー名を変更して古いキャッシュをリセットし、新しいデータを強制読み込み
-        const saved = localStorage.getItem('slot_app_rukoItems_v46');
+        // ★クラッシュ原因になる古いキャッシュをリセットするためバージョンを v47 に変更
+        const saved = localStorage.getItem('slot_app_rukoItems_v47');
         let items = RUKO_OFFICIAL_DATA;
         if (saved) {
-          try { items = JSON.parse(saved); } catch (e) { console.error(e); }
+          try { 
+            const parsed = JSON.parse(saved); 
+            if(Array.isArray(parsed)) items = parsed;
+          } catch (e) { console.error(e); }
         }
-        return items.map(item => ({ ...item, memo: item.memo || DEFAULT_MEMO_TEMPLATE }));
+        return items.filter(item => item).map(item => ({ ...item, memo: item.memo || DEFAULT_MEMO_TEMPLATE }));
       });
 
       const [myItems, setMyItems] = useState(() => {
-        // ★キー名を変更して古いキャッシュをリセット
-        const saved = localStorage.getItem('slot_app_myItems_v46');
+        // ★クラッシュ原因になる古いキャッシュをリセットするためバージョンを v47 に変更
+        const saved = localStorage.getItem('slot_app_myItems_v47');
         let items = [
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
         if (saved) {
-          try { items = JSON.parse(saved); } catch (e) { console.error(e); }
+          try { 
+            const parsed = JSON.parse(saved); 
+            if(Array.isArray(parsed)) items = parsed;
+          } catch (e) { console.error(e); }
         }
-        return items.map(item => ({ ...item, memo: item.memo || DEFAULT_MEMO_TEMPLATE }));
+        return items.filter(item => item).map(item => ({ ...item, memo: item.memo || DEFAULT_MEMO_TEMPLATE }));
       });
 
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
-        localStorage.setItem('slot_app_rukoItems_v46', JSON.stringify(rukoItems));
+        localStorage.setItem('slot_app_rukoItems_v47', JSON.stringify(rukoItems));
       }, [rukoItems]);
 
       useEffect(() => {
-        localStorage.setItem('slot_app_myItems_v46', JSON.stringify(myItems));
+        localStorage.setItem('slot_app_myItems_v47', JSON.stringify(myItems));
       }, [myItems]);
 
       const [isEditing, setIsEditing] = useState(false);
@@ -641,13 +652,14 @@
         }
       };
 
+      // キャッシュのデータ欠落でクラッシュしないよう安全にtoLowerCaseを呼ぶ
       const filteredItems = currentItems.filter(item => 
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        (item.name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
         (item.detail && item.detail.toLowerCase().includes(searchQuery.toLowerCase()))
       );
 
       const filteredDB = MASTER_TARGET_DATABASE.filter(item => 
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        (item.name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
         (item.detail && item.detail.toLowerCase().includes(searchQuery.toLowerCase()))
       );
 
