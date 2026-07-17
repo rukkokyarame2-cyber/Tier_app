@@ -56,26 +56,26 @@
     // Rukoさんの公式データ
     const RUKO_OFFICIAL_DATA = [
       {
-        "id": "r_otome5",
-        "name": "乙女５",
-        "detail": "差枚狙い",
-        "tier": "新台",
-        "tag": "差枚",
-        "tagColor": "bg-yellow-400",
-        "imageUrl": "image_otome5.jpg",
-        "link": "https://note.com/ruko7613/n/nc73f5964c00f",
-        "memo": "【一言メモ】\n・ほぼモンキー\n・冷遇挙動は無いので差枚×1周期狙い\n\n【狙い目ボーダー】\n・記事を参考に差枚＋500枚以上を1周期見て、示唆で打ち分ける"
+        "id": "r_comp",
+        "name": "コンプ対策",
+        "detail": "",
+        "tier": "内部仕様",
+        "tag": "",
+        "tagColor": "",
+        "imageUrl": "image_comp.jpg",
+        "link": "",
+        "memo": "4月にコンプ規制明確化になってからの荒波機種について共通仕様/今後の新台もほぼ同じだと思う。\n\n・上位(切断)後の挙動\n→基本的には出玉冷遇で連チャンはほぼしない\n→その代わりに別仕様で部分的に打てる箇所有る場合多い(ミミズ挙動でコンプ防ぐ)\n\n・上位枚数の固定化\n→切断までは高確率で継続する代わりに、\n切断後に1000枚前後出して終了って台が多い\n→切断前の区間と合わせて6000枚前後に落ち着く\n\n・凹み優遇\n→単純に切断まで枚数が出ることが多いので凹んでれば凹んでるだけ強い。その代わりに朝2〜凹むまでが打つ意味の無い区間すぎる。\n→凹みが強いけど凹みすぎると良く無いって仕様はありそう。共通して-2000〜-4000が良さげ。"
       },
       {
-        "id": "r_sao2",
-        "name": "SAO２",
-        "detail": "調査中",
-        "tier": "新台",
-        "tag": "調査中",
-        "tagColor": "bg-gray-400",
-        "imageUrl": "image_sao2.jpg",
+        "id": "r_sengoku6",
+        "name": "戦コレ6",
+        "detail": "示唆＆1周期狙い",
+        "tier": "A",
+        "tag": "ゾーン, 優遇",
+        "tagColor": "bg-cyan-400, bg-red-500",
+        "imageUrl": "image_sengoku6.jpg",
         "link": "",
-        "memo": "【一言メモ】\n・現在液晶情報収集中\n\n・上位後（ウルティマ後）の謎ストックATはコンプ対策のミミズ区間なだけで狙い目にならないと予想。\n\n【狙い目ボーダー】\n調査中"
+        "memo": "基本方針💡\n「とにかく1周期打ち＆示唆狙いが甘いのでそれと他条件を複合させる。」\n\n※ただし、偶数ATを狙っている最中に次回モードB以上濃厚になっても捨てる。奇数周期のモードBに価値が無いのはリセットの割の低さから自明なので。\n\nパターン①\n前回1000～1800枚後：特殊モード狙い\n・上記条件を示唆を見ながら1周期打つ\n・前回が天国当選で落ちていた場合でも前々回が1000～1800枚後ならループ中の可能性があるので1周期目を打つ。\n\nやめどき\n・天国抜け後、B以上濃厚＆高シナリオ濃厚ではない場合。\n\nパターン②\nAT偶数回数目：シナリオ救済狙い\n・AT回数２,4,6,8回目の1周期を示唆を見ながら打つ\n※ただしそれまでの偶数回目のATが伸びていないことを確認すること。\n画像であれば4回目で伸びているので6回目、8回目は打てない。\n\nやめどき\n・偶数AT当選後、天国濃厚状態ではない場合\n・天国抜け後、B以上濃厚＆高シナリオ濃厚ではない場合。"
       },
       {
         "id": "r_rioace2",
@@ -100,21 +100,10 @@
         "memo": "【一言メモ】\n・連荘最後の1RBをスルーカウントしないよう注意\n・スルーで狙うよりAT間で狙うことのが多そう\n【狙い目ボーダー】\nCZポイント100以下想定\n・リセ\nAT間230G～※天井650G\n・リセ以外\nAT間570G～※天井1000G\n\n・スルー天井狙い\n4スルー～※天井6スルー\n\n・上位後0スNEポイント狙い\n０G～※NEポイント天井100pt\n実Gと液晶Gずれるので判別可能"
       },
       {
-        "id": "r_bigdream",
-        "name": "ビッグドリーム",
-        "detail": "穢れ＆天井狙い",
-        "tier": "B",
-        "tag": "天井, 穢れ",
-        "tagColor": "bg-cyan-400, bg-purple-500",
-        "imageUrl": "image_bigdream.jpg",
-        "link": "https://note.com/ruko7613/n/neb076b7a1911",
-        "memo": "【一言メモ】\n※めちゃくちゃ拾えるがボーダー調整要素多いので注意\n\n【ボーダー調整要素※優先度順】\n①差枚凹み\n差枚凸の場合せっかく4桁乗せしても取り切れないことあるし切断弱いので✖\n2000枚以上凹んでいることが大事\n②ボール状況\n後ろの方に青が固まっているときは抽選受けるまで時間かかりすぎるので100G以上辛く見た方がいい\n③直撃間G数\nボール天井に到達すると直撃信号上がることが多いので当日に直撃している場合はボーダー上げた方が良い。\n通常G数2000～4000で解放しやすいのでそこをできれば打ちたい\n④前回AT枚数\n前回駆け抜け後だと次回AT性能が上がりやすい。BB信号が3追加なら駆け抜けなのでボーダー100下げる\n⑤ドリームメーター色\n紫ならボーダー下げれるが赤以下は無視で言いい\n\n【狙い目ボーダー】\n基本駆け抜け後200G～、それ以外400G～として上記項目を使って調整する。\n\n例えば\n①差枚2000以上凹み　100G甘くする\n②ボール青しかなく奥ばかり　100G辛くする\n③直撃間通常Gが2000G　100G甘くする\n④非駆け抜け後　400Gを基準にする\n⑤ドリームメーター黄色　50G辛くする\nなら\n350G~みたいな感じ。\n\nここの調整は自分も調査中なので各自打感強めたり情報収集して自分の中で納得できるように。"
-      },
-      {
         "id": "r_godkiseki",
         "name": "Lゴッド軌跡",
         "detail": "優遇天井狙い",
-        "tier": "S",
+        "tier": "A",
         "tag": "優遇, 天井",
         "tagColor": "bg-red-500, bg-cyan-400",
         "imageUrl": "image_godkiseki.jpg",
@@ -125,7 +114,7 @@
         "id": "r_yoshimune",
         "name": "真打吉宗",
         "detail": "各種狙い目",
-        "tier": "B",
+        "tier": "C",
         "tag": "天井, ゾーン",
         "tagColor": "bg-cyan-400, bg-cyan-400",
         "imageUrl": "image_yoshimune.jpg",
@@ -136,7 +125,7 @@
         "id": "r_yoshimune2",
         "name": "真打吉宗",
         "detail": "メニュー画面狙い",
-        "tier": "B",
+        "tier": "C",
         "tag": "示唆狙い",
         "tagColor": "bg-purple-500",
         "imageUrl": "image_yoshimune.jpg",
@@ -153,17 +142,6 @@
         "imageUrl": "image_yoshimune.jpg",
         "link": "",
         "memo": "【一言メモ】\n・差枚-3000枚以下の1周期を打てる。\n→差枚マイナスの際に１G連が獲得しやすいので1回目のBB後にまだ差枚マイナスなことに期待できるぐらい凹んでることが条件\n\n・天国示唆が全然でないので前任者気にしなくていい\n\n【狙い目ボーダー】\n差枚－3000枚以下\nAT後0G～1周期"
-      },
-      {
-        "id": "r_jormungand",
-        "name": "ヨルムンガンド",
-        "detail": "天井狙い",
-        "tier": "その他狙い目",
-        "tag": "天井",
-        "tagColor": "bg-cyan-400",
-        "imageUrl": "image_jormungand.jpg",
-        "link": "",
-        "memo": "【一言メモ】\n・リセ後と上位CZ失敗後は450G天井になる\n・下位後でも450Gの仮天振り分けが35％以上あるのでゾーン狙いできる\n・上位CZ後は液晶とデータがずれるので見抜ける\n（喰種の有馬ジャッジメント失敗後と同じ）\n\n【狙い目ボーダー】\n・リセ後・上位CZ失敗後※450G天井\n160G～\n・上位CZ失敗後※450G天井\n200G～\n\n・下位AT後\n天井狙い：650G～\nゾーン狙い：400G～450Gの前兆抜けまで"
       },
       {
         "id": "r_kabaneri",
@@ -224,7 +202,7 @@
         "id": "r6",
         "name": "ヴヴヴ２",
         "detail": "優遇モード狙い",
-        "tier": "B",
+        "tier": "C",
         "tag": "優遇",
         "tagColor": "bg-red-500",
         "imageUrl": "image_vvv2.jpg",
@@ -235,23 +213,12 @@
         "id": "r8",
         "name": "ゴッドイー夕ー",
         "detail": "差枚狙い",
-        "tier": "B",
+        "tier": "C",
         "tag": "差枚",
         "tagColor": "bg-yellow-400",
         "imageUrl": "image_godeater.jpg",
         "link": "",
         "memo": "【一言メモ】\n・いまだにコンスタントに拾える\n・特に露骨な冷遇挙動もなく、切断ライン付近を長く打てる展開にもなりやすく仕事量積みやすい\n\n【狙い目ボーダー】\n・上位後天井狙い\n差枚＋1500枚以上　\n０G～\n差枚＋1000枚以上\n100ゾーン抜け～\n\n・非短縮後ゾーン狙い\n差枚＋1000枚以上\n０G～100ゾーンまで\n☆セリフ示唆\n300ゾーンで当たる場合はレンのセリフなど示唆が頻発するのでこの際は100抜けから300ゾーンまで打つ"
-      },
-      {
-        "id": "r9",
-        "name": "沖ドキゴージャス",
-        "detail": "区間切断",
-        "tier": "B",
-        "tag": "区間切断",
-        "tagColor": "bg-purple-600",
-        "imageUrl": "image_okidokig.jpg",
-        "link": "",
-        "memo": "【一言メモ】\n・沖ドキの基本的なことは通っていることとする\n・この台はモードA→Bの移行率が極端に低くスルーすればするほど直天国期待できなくなるレベルなのでスルー数は特に気にしなくていい\n・ただ0スよりは1スのが飛ぶので0スのボナ当選時のみモード移行率優遇があると考えられる\n\n【狙い目ボーダー】\n区間切断が3000～4000で変動するが、基本的には3000以降の天国か4000以降のボナで切れる可能性が高い。\nなので\n有利2100Gかつ1ス以降（当該32G）を打ち出して\n3000以降の天国か4000以降のボナ当選まで打つ\n\n※当該が深ければボーダー下げられるので各自調整"
       },
       {
         "id": "r10",
@@ -351,6 +318,17 @@
         "imageUrl": "image_okidokiduo.jpg",
         "link": "https://note.com/ruko7613/n/n1171ffbdcba5",
         "memo": "【一言メモ】\n・稼働は少なく、通常のハイエナは厳しい\n・リセット区間は甘く少しでも触られていれば打てるのでほぼそれだけ\n・投資がだいぶかかる台なので等価か持ち玉余裕あるときのみ打つ\n\n【狙い目ボーダー】\n・朝一０スの台を100G～160Gまで\n・この区間に当選した場合はそのまま天国か5スルーまで打つ\n・5スルーした時点で通常モードB以上かドキハナB以上の示唆が出てなければやめ。示唆ありなら天国まで。"
+      },
+      {
+        "id": "r_yabachiyo",
+        "name": "ヤバチヨ",
+        "detail": "凹み狙い",
+        "tier": "B",
+        "tag": "天井",
+        "tagColor": "bg-cyan-400",
+        "imageUrl": "image_yabachiyo.jpg",
+        "link": "",
+        "memo": "【一言メモ】\n虹7モードがほとんど区間切断まで行く＆切断後がそんなに伸びないという仕様なので差枚凹みを打つのが良い。\n\n荒すぎる台なので生活向きではない。\n\n【狙い目ボーダー】\n差枚－2000枚以下\n積極：7チェ（目安170G～）\n慎重：13チェ（目安300G～）"
       }
     ];
 
@@ -362,7 +340,7 @@
     ];
 
     const TIER_CONFIG = [
-      { id: '新台', label: '新台', bg: 'bg-gradient-to-r from-pink-500 to-rose-600' },
+      { id: '内部仕様', label: '内部仕様について', bg: 'bg-gradient-to-r from-pink-500 to-rose-600' },
       { id: 'S', label: 'S', bg: 'bg-gradient-to-r from-red-400 to-red-600' },
       { id: 'A', label: 'A', bg: 'bg-gradient-to-r from-orange-400 to-orange-500' },
       { id: 'B', label: 'B', bg: 'bg-gradient-to-r from-yellow-400 to-yellow-500' },
@@ -449,7 +427,7 @@
       const [rukoItems, setRukoItems] = useState(() => {
         let items = RUKO_OFFICIAL_DATA;
         try {
-          const saved = localStorage.getItem('slot_app_rukoItems_v53');
+          const saved = localStorage.getItem('slot_app_rukoItems_v57');
           if (saved) {
             const parsed = JSON.parse(saved); 
             if(Array.isArray(parsed)) items = parsed;
@@ -463,7 +441,7 @@
           { id: 'm1', name: 'マイスロ設定メモ', detail: '期待値稼働用', tier: 'S', tag: '設定狙い', tagColor: 'bg-green-400', imageUrl: 'image_23.jpg', link: '', memo: DEFAULT_MEMO_TEMPLATE }
         ];
         try {
-          const saved = localStorage.getItem('slot_app_myItems_v53');
+          const saved = localStorage.getItem('slot_app_myItems_v57');
           if (saved) {
             const parsed = JSON.parse(saved); 
             if(Array.isArray(parsed)) items = parsed;
@@ -475,13 +453,13 @@
       // データが更新されるたびにブラウザに自動保存する
       useEffect(() => {
         try {
-          localStorage.setItem('slot_app_rukoItems_v53', JSON.stringify(rukoItems));
+          localStorage.setItem('slot_app_rukoItems_v57', JSON.stringify(rukoItems));
         } catch (e) { console.warn("シークレットモード等により保存できませんでした", e); }
       }, [rukoItems]);
 
       useEffect(() => {
         try {
-          localStorage.setItem('slot_app_myItems_v53', JSON.stringify(myItems));
+          localStorage.setItem('slot_app_myItems_v57', JSON.stringify(myItems));
         } catch (e) { console.warn("シークレットモード等により保存できませんでした", e); }
       }, [myItems]);
 
@@ -662,7 +640,7 @@
               
               <div className="flex justify-between items-end mt-1">
                 <p className="text-sm sm:text-base font-black italic leading-tight">
-                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/6/19" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
+                  {activeTab === 'ruko' ? "最新狙い目Tier表 2026/7/18" : activeTab === 'my' ? "My Tier List" : "狙い目マスター"}
                 </p>
                 {activeTab === 'ruko' && (
                   <p className="text-[9px] text-red-500 whitespace-nowrap ml-2 pb-0.5 font-medium">ホールでの拾いやすさ×期待値の高さで決定</p>
@@ -707,11 +685,11 @@
                     現環境について
                   </h2>
                   <p className="text-xs text-gray-600 font-medium leading-relaxed whitespace-pre-wrap">
-                    転生リセのこなせる台数減ってきたので、喰種リセも混ぜる必要が出てきた。{"\n\n"}
-                    昼以降はGODのベースが良い店で優遇狙いするのが一番強いのでこれに頼る。{"\n\n"}
-                    カバネリが未だに一番人気だが、エナ機としては弱くて渋い。{"\n\n"}
-                    乙女は差枚狙いしかやることない。{"\n"}
-                    SAO2は何か狙えそうなので調査中。
+                    GODが急激に拾えなくなったのでS→Aに。{"\n"}
+                    転生も相当台数減ったが1台長く打てるのでS維持。{"\n\n"}
+                    先月より厳しい環境となった。{"\n\n"}
+                    今は戦コレ６が注目株。{"\n"}
+                    4月以降のコンプ規制強化を対策をした歪んだ爆裂機がこれからいろいろ出そうではあるので期待。
                   </p>
                 </div>
 
@@ -774,6 +752,7 @@
             )}
           </main>
 
+          {}
           {/* 新規追加フローティングボタン */}
           {(activeTab === 'my' || (activeTab === 'ruko' && IS_ADMIN_MODE)) && isEditing && (
             <button 
